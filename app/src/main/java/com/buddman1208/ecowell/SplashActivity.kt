@@ -3,6 +3,7 @@ package com.buddman1208.ecowell
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.buddman1208.ecowell.ui.MainActivity
 import org.jetbrains.anko.startActivity
 
 class SplashActivity : AppCompatActivity() {
