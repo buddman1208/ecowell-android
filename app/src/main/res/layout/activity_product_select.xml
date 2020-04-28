@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -13,6 +14,67 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.ProductSelectActivity">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_ecowell"
+            app:layout_constraintBottom_toTopOf="@id/btnLuWellSelect"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <ImageView
+            android:id="@+id/btnLuWellSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/btn_select_luwell_enable"
+            app:layout_constraintBottom_toTopOf="@id/btnConnection"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/btnIonSelect"
+            app:layout_constraintTop_toBottomOf="@id/ivLogo" />
+
+        <ImageView
+            android:id="@+id/btnIonSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/btn_select_ionstone_disable"
+            app:layout_constraintLeft_toRightOf="@id/btnLuWellSelect"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnLuWellSelect" />
+
+        <RelativeLayout
+            android:id="@+id/btnConnection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorEcoWell"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/btnLuWellSelect"
+            app:layout_constraintRight_toRightOf="@id/btnIonSelect"
+            app:layout_constraintTop_toBottomOf="@id/btnLuWellSelect">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@drawable/ic_bluetooth_svgrepo_com"
+                android:gravity="center"
+                android:drawablePadding="8dp"
+                android:src="@drawable/btn_bluetooth_connect"
+                android:text="Bluetooth Connection"
+                android:textAlignment="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
