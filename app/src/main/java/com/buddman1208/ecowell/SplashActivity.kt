@@ -3,7 +3,7 @@ package com.buddman1208.ecowell
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.buddman1208.ecowell.ui.MainActivity
+import com.buddman1208.ecowell.ui.ProductSelectActivity
 import org.jetbrains.anko.startActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -17,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun startMain() {
         Handler().postDelayed({
-            startActivity<MainActivity>()
+            startActivity<ProductSelectActivity>()
             finish()
         }, 1500)
     }

@@ -1,15 +1,20 @@
 package com.buddman1208.ecowell.base
 
+import android.os.Bundle
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlin.reflect.KClass
 
 
 abstract class BaseViewModel : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
+    val activityToStart = ObservableField<Pair<KClass<*>, Bundle?>>()
+
 
     protected val mutableErrorTextResId = MutableLiveData<Int>()
     val errorTextResId: LiveData<Int> get() = mutableErrorTextResId
