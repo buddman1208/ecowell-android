@@ -1,6 +1,7 @@
 package com.buddman1208.ecowell.ui
 
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.databinding.ObservableBoolean
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.base.BaseViewModel
@@ -16,5 +17,11 @@ class ProductSelectViewModel : BaseViewModel() {
         if(view.id == R.id.btnIonSelect) {
             view.context.toast("아직 사용할 수 없습니다.")
         }
+    }
+
+    fun onBluetoothButtonClicked(view : View) {
+        activityToStart.set(
+            Pair(MainActivity::class, bundleOf())
+        )
     }
 }

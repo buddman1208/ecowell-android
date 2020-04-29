@@ -56,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@color/colorEcoWell"
+            android:onClick="@{vm::onBluetoothButtonClicked}"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/btnLuWellSelect"
