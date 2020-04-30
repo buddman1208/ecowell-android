@@ -8,5 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="InfoTextWithIcons" parent="Widget.AppCompat.TextView">
+        <item name="android:drawablePadding">@dimen/drawable_padding</item>
+        <item name="android:textColor">@color/colorCommonBlack</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="MajorText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorHardBlack</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="CommonText" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorCommonBlack</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 
 </resources>

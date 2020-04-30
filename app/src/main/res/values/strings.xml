@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EcoWell</string>
+    <string name="toolbar_title">Lu±Well</string>
+    <string name="led">LED</string>
+    <string name="microcurrent">Microcurrent</string>
+    <string name="galvanic">Galvanic Ionto</string>
 </resources>

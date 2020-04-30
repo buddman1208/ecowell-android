@@ -4,24 +4,242 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="com.buddman1208.ecowell.ui.MainViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".ui.MainActivity">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toolbarContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{vm.title}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@color/colorCommonBlack">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:text="@string/toolbar_title"
+                android:textColor="#FFF"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Background Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/pic_luwell_background" />
+
+            <!-- Top Icons -->
+
+            <ImageView
+                android:id="@+id/ivGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:padding="16dp"
+                android:src="@drawable/ic_guide_selector"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvBluetooth"
+                style="@style/InfoTextWithIcons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ic_bluetooth_on"
+                android:text="Bluetooth"
+                app:layout_constraintBottom_toBottomOf="@id/ivGuide"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ivGuide" />
+
+            <TextView
+                android:id="@+id/tvBattery"
+                style="@style/InfoTextWithIcons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:drawableRight="@drawable/img_battery_low"
+                android:drawablePadding="@dimen/drawable_padding"
+                android:text="Battery"
+                app:layout_constraintBottom_toBottomOf="@id/ivGuide"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ivGuide" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/ivHomepage"
+                app:layout_constraintTop_toBottomOf="@id/ivGuide">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/glLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.15" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/glRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.85" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/glTop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.15" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/glBottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.85" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:src="@drawable/pic_timer_stopping"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="h, 1"
+                        app:layout_constraintBottom_toBottomOf="@id/glBottom"
+                        app:layout_constraintLeft_toLeftOf="@id/glLeft"
+                        app:layout_constraintRight_toRightOf="@id/glRight"
+                        app:layout_constraintTop_toTopOf="@id/glTop" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    style="@style/MajorText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MODE" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingLeft="36dp"
+                    android:paddingRight="36dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:padding="4dp"
+                            android:src="@drawable/btn_led_off" />
+
+                        <TextView
+                            style="@style/CommonText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/led" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:padding="4dp"
+                            android:src="@drawable/btn_microcurrent_off" />
+
+                        <TextView
+                            style="@style/CommonText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/microcurrent" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:padding="4dp"
+                            android:src="@drawable/btn_galvanic_1" />
+
+                        <TextView
+                            style="@style/CommonText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/galvanic" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivHomepage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:src="@drawable/ic_homepage_selector"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:clickable="true"
+                android:padding="20dp"
+                android:src="@drawable/ic_setting_selector"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 </layout>
