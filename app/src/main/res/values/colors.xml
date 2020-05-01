@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/colorEcoWell</color>
     <color name="colorPrimaryDark">#707070</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">#EB5E79</color>
 
     <color name="colorEcoWell">#007FCA</color>
     <color name="colorCommonBlack">#414141</color>
