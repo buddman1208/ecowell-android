@@ -5,6 +5,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.ObservableBoolean
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.base.BaseViewModel
+import com.buddman1208.ecowell.utils.clearAndSet
 import org.jetbrains.anko.toast
 
 class ProductSelectViewModel : BaseViewModel() {
@@ -20,7 +21,7 @@ class ProductSelectViewModel : BaseViewModel() {
     }
 
     fun onBluetoothButtonClicked(view : View) {
-        activityToStart.set(
+        activityToStart.clearAndSet(
             Pair(MainActivity::class, bundleOf())
         )
     }
