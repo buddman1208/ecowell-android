@@ -48,6 +48,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
 
+    // Font
     implementation 'com.github.katoro:typekit:1.0.1'
 
+    // Numberpicker
+    implementation 'com.super_rabbit.wheel_picker:NumberPicker:1.0.1'
 }
