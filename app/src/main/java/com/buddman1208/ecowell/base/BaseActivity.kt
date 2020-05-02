@@ -38,7 +38,13 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
     private val newDialogCallback by lazy {
         object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                val value = viewModel.activityToStart
+                val value = viewModel.dialogToStart
+                value.get()?.run {
+                    val instance = this.first.java.newInstance()
+                    if(instance is BaseDialogFragment<*, *>) {
+                        instance.show(supportFragmentManager, "")
+                    }
+                }
             }
         }
     }
@@ -57,6 +63,8 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
         binding = DataBindingUtil.setContentView(this, layoutResId)
         viewModel.activityToStart.addOnPropertyChangedCallback(newActivityCallback)
         viewModel.browseToStart.addOnPropertyChangedCallback(browseCallback)
+        viewModel.dialogToStart.addOnPropertyChangedCallback(newDialogCallback)
+
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -67,5 +75,6 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
         super.onDestroy()
         viewModel.activityToStart.removeOnPropertyChangedCallback(newActivityCallback)
         viewModel.browseToStart.removeOnPropertyChangedCallback(browseCallback)
+        viewModel.dialogToStart.removeOnPropertyChangedCallback(newDialogCallback)
     }
 }
