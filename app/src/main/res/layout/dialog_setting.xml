@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -19,9 +20,19 @@
             style="@style/MajorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="24dp"
             android:text="@string/setting"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:padding="4dp"
+            android:src="@drawable/ic_close_selector"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,6 +41,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/llMicrocurrent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle">
@@ -39,27 +52,71 @@
                 android:layout_height="60dp"
                 android:src="@drawable/ic_led" />
 
-            <com.super_rabbit.wheel_picker.WheelPicker
+            <com.shawnlin.numberpicker.NumberPicker
+                style="@style/CommonNumberPicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:max="3"
-                app:min="1" />
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:np_max="3"
+                app:np_min="1"
+                bind:pickerFont='@{"NanumSquareBold.ttf"}' />
 
             <TextView
-                style="@style/CommonText"
+                style="@style/BoldHorizontalPressedText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="LEVEL MAX 3" />
         </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/colorGray"
+            app:layout_constraintBottom_toBottomOf="@id/llLed"
+            app:layout_constraintLeft_toRightOf="@id/llLed"
+            app:layout_constraintTop_toTopOf="@id/llLed" />
 
         <LinearLayout
             android:id="@+id/llMicrocurrent"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toBottomOf="@id/llLed"
             app:layout_constraintLeft_toRightOf="@id/llLed"
             app:layout_constraintRight_toLeftOf="@id/llGalvanic"
+            app:layout_constraintTop_toTopOf="@id/llLed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_microcurrent" />
+
+            <com.shawnlin.numberpicker.NumberPicker
+                style="@style/CommonNumberPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:np_max="5"
+                app:np_min="1"
+                bind:pickerFont='@{"NanumSquareBold.ttf"}' />
+
+            <TextView
+                style="@style/BoldHorizontalPressedText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LEVEL MAX 5" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/colorGray"
+            app:layout_constraintBottom_toBottomOf="@id/llLed"
+            app:layout_constraintLeft_toRightOf="@id/llMicrocurrent"
             app:layout_constraintTop_toTopOf="@id/llLed" />
 
         <LinearLayout
@@ -67,10 +124,43 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toBottomOf="@id/llLed"
             app:layout_constraintLeft_toRightOf="@id/llMicrocurrent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/llLed" />
+            app:layout_constraintTop_toTopOf="@id/llLed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_galvanic" />
+
+            <com.shawnlin.numberpicker.NumberPicker
+                style="@style/CommonNumberPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:np_max="1"
+                app:np_min="1"
+                bind:pickerFont='@{"NanumSquareBold.ttf"}' />
+
+            <TextView
+                style="@style/BoldHorizontalPressedText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LEVEL MAX 1" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="close"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llLed" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
