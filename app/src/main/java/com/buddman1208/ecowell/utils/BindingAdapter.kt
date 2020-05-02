@@ -4,6 +4,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.buddman1208.ecowell.view.RoundProgressView
 
 class DataBindingAdapter {
     companion object {
@@ -18,6 +19,12 @@ class DataBindingAdapter {
         fun loadDrawableRight(tv: TextView, resId: Int) {
             val iconOnRight = ContextCompat.getDrawable(tv.context, resId)
             tv.setCompoundDrawablesWithIntrinsicBounds(null, null, iconOnRight, null)
+        }
+
+        @JvmStatic
+        @BindingAdapter("progress")
+        fun loadProgress(pv: RoundProgressView, progress: Int) {
+            pv.progress = progress
         }
     }
 }
