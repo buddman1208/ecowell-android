@@ -35,5 +35,19 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="BoldHorizontalPressedText" parent="CommonBoldText">
+        <item name="android:letterSpacing">-0.025</item>
+    </style>
+
+    <style name="CommonNumberPicker">
+        <item name="np_dividerColor">@android:color/transparent</item>
+        <item name="np_selectedTextColor">@color/colorHardBlack</item>
+        <item name="np_selectedTextSize">40sp</item>
+        <item name="np_textColor">@color/colorCommonBlack</item>
+        <item name="np_textSize">40sp</item>
+        <item name="np_wheelItemCount">3</item>
+        <item name="np_wrapSelectorWheel">true</item>
+    </style>
+
 
 </resources>
