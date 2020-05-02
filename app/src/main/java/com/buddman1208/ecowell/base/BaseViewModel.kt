@@ -14,6 +14,8 @@ abstract class BaseViewModel : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     val activityToStart = ObservableField<Pair<KClass<*>, Bundle?>>()
+    val dialogToStart = ObservableField<Pair<KClass<*>, Bundle?>>()
+    val browseToStart = ObservableField<String>()
 
 
     protected val mutableErrorTextResId = MutableLiveData<Int>()
