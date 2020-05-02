@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.buddman1208.ecowell.ui.SettingDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/MajorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:text="@string/setting"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/llLed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/llMicrocurrent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_led" />
+
+            <com.super_rabbit.wheel_picker.WheelPicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:max="3"
+                app:min="1" />
+
+            <TextView
+                style="@style/CommonText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LEVEL MAX 3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMicrocurrent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/llLed"
+            app:layout_constraintLeft_toRightOf="@id/llLed"
+            app:layout_constraintRight_toLeftOf="@id/llGalvanic"
+            app:layout_constraintTop_toTopOf="@id/llLed" />
+
+        <LinearLayout
+            android:id="@+id/llGalvanic"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/llLed"
+            app:layout_constraintLeft_toRightOf="@id/llMicrocurrent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/llLed" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

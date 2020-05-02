@@ -4,4 +4,5 @@
     <string name="led">LED</string>
     <string name="microcurrent">Microcurrent</string>
     <string name="galvanic">Galvanic Ionto</string>
+    <string name="setting">SETTING</string>
 </resources>
