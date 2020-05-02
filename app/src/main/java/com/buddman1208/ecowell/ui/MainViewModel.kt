@@ -10,11 +10,12 @@ import com.buddman1208.ecowell.base.BaseViewModel
 class MainViewModel : BaseViewModel() {
 
     // Datas
+    val isShowTutorial: ObservableBoolean = ObservableBoolean(false)
     val batteryLevel: ObservableField<BatteryLevel> = ObservableField(BatteryLevel.FULL)
     val ledLevel: ObservableInt = ObservableInt(0)
     val microCurrentLevel: ObservableInt = ObservableInt(0)
     val galvanicIontoLevel: ObservableInt = ObservableInt(0)
-//    val progress: ObservableInt = ObservableInt(50)
+    //    val progress: ObservableInt = ObservableInt(50)
     val progress: Int = 90
     val isRunning: ObservableBoolean = ObservableBoolean(false)
 
@@ -72,28 +73,28 @@ class MainViewModel : BaseViewModel() {
         galvanicIontoLevel.addOnPropertyChangedCallback(callback)
     }
 
-     fun openTutorial() {
-//        dialogToStart.
+    fun onTutorialClick() {
+        isShowTutorial.set(!isShowTutorial.get())
     }
 
-     fun onLedClick() {
+    fun onLedClick() {
         val level = ledLevel.get()
         ledLevel.set(
-            if(level < 3) level + 1 else 0
+            if (level < 3) level + 1 else 0
         )
     }
 
-     fun onMicrocurrentClick() {
+    fun onMicrocurrentClick() {
         val level = microCurrentLevel.get()
         microCurrentLevel.set(
-            if(level < 5) level + 1 else 0
+            if (level < 5) level + 1 else 0
         )
     }
 
-     fun onGalvanicClick() {
+    fun onGalvanicClick() {
         val level = galvanicIontoLevel.get()
         galvanicIontoLevel.set(
-            if(level < 1) level + 1 else 0
+            if (level < 1) level + 1 else 0
         )
     }
 
