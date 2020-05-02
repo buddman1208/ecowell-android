@@ -77,9 +77,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:drawableRight="@drawable/img_battery_low"
                 android:drawablePadding="@dimen/drawable_padding"
                 android:text="Battery"
+                app:iconOnRight="@{vm.batteryImg}"
                 app:layout_constraintBottom_toBottomOf="@id/ivGuide"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/ivGuide" />
@@ -127,8 +127,7 @@
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:src="@drawable/pic_timer_stopping"
-                        android:visibility="gone"
+                        android:src="@{vm.isRunning() ? @drawable/pic_timer_playing : @drawable/pic_timer_stopping}"
                         app:layout_constraintBottom_toBottomOf="@id/glBottom"
                         app:layout_constraintDimensionRatio="h, 1"
                         app:layout_constraintLeft_toLeftOf="@id/glLeft"
@@ -136,14 +135,16 @@
                         app:layout_constraintTop_toTopOf="@id/glTop" />
 
                     <com.buddman1208.ecowell.view.RoundProgressView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:progressPercent="60"
-                        app:strokeWidth="10dp" />
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="@id/glBottom"
+                        app:layout_constraintDimensionRatio="h, 1"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toLeftOf="@id/glLeft"
+                        app:layout_constraintRight_toRightOf="@id/glRight"
+                        app:layout_constraintTop_toTopOf="@id/glTop"
+                        app:strokeWidth="10dp"
+                        app:progress="@{vm.progress}"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -165,6 +166,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:onClick="@{() -> vm.onLedClick()}"
                         android:orientation="vertical">
 
                         <ImageView
@@ -172,7 +174,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:padding="4dp"
-                            android:src="@drawable/btn_led_off" />
+                            app:imageRes="@{vm.ledImg}" />
 
                         <TextView
                             style="@style/CommonText"
@@ -186,6 +188,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:onClick="@{() -> vm.onMicrocurrentClick()}"
                         android:orientation="vertical">
 
                         <ImageView
@@ -193,7 +196,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:padding="4dp"
-                            android:src="@drawable/btn_microcurrent_off" />
+                            app:imageRes="@{vm.microImg}" />
 
                         <TextView
                             style="@style/CommonText"
@@ -207,6 +210,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:onClick="@{() -> vm.onGalvanicClick()}"
                         android:orientation="vertical">
 
                         <ImageView
@@ -214,7 +218,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:padding="4dp"
-                            android:src="@drawable/btn_galvanic_1" />
+                            app:imageRes="@{vm.galvanicImg}" />
 
                         <TextView
                             style="@style/CommonText"
