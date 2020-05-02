@@ -6,6 +6,7 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.base.BaseViewModel
+import com.buddman1208.ecowell.utils.clearAndSet
 
 class MainViewModel : BaseViewModel() {
 
@@ -98,7 +99,7 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun onHomepageClick() {
-        browseToStart.set("http://ecowell.co.kr/")
+        browseToStart.clearAndSet("http://ecowell.co.kr/")
     }
 
 }
