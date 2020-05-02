@@ -7,5 +7,6 @@
     <color name="colorEcoWell">#007FCA</color>
     <color name="colorCommonBlack">#414141</color>
     <color name="colorHardBlack">#444444</color>
+    <color name="colorGray">#E8E8E8</color>
 
 </resources>
