@@ -66,7 +66,7 @@ class RoundProgressView(context: Context, attrs: AttributeSet) : View(context, a
 
             try {
                 strokeWidth = getDimensionPixelSize(R.styleable.RoundProgressView_strokeWidth, 10)
-                progress = getInteger(R.styleable.RoundProgressView_progress, 50)
+                progress = getInteger(R.styleable.RoundProgressView_progressPercent, 50)
                 progressColor = getColor(R.styleable.RoundProgressView_progressColor, progressColor)
                 strokeColor = getColor(R.styleable.RoundProgressView_strokeColor, strokeColor)
             } finally {
