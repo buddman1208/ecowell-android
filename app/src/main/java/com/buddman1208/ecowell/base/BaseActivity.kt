@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import com.tsengvn.typekit.TypekitContextWrapper
+import org.jetbrains.anko.browse
 
 abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
     @LayoutRes private val layoutResId: Int
@@ -34,10 +35,28 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
         }
     }
 
+    private val newDialogCallback by lazy {
+        object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                val value = viewModel.activityToStart
+            }
+        }
+    }
+
+    private val browseCallback by lazy {
+        object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                val value = viewModel.browseToStart
+                value.get()?.run { browse(this) }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutResId)
         viewModel.activityToStart.addOnPropertyChangedCallback(newActivityCallback)
+        viewModel.browseToStart.addOnPropertyChangedCallback(browseCallback)
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -47,5 +66,6 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
     override fun onDestroy() {
         super.onDestroy()
         viewModel.activityToStart.removeOnPropertyChangedCallback(newActivityCallback)
+        viewModel.browseToStart.removeOnPropertyChangedCallback(browseCallback)
     }
 }
