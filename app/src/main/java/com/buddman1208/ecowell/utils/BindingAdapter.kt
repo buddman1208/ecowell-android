@@ -5,6 +5,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.buddman1208.ecowell.view.RoundProgressView
+import com.shawnlin.numberpicker.NumberPicker
+import com.tsengvn.typekit.Typekit
 
 class DataBindingAdapter {
     companion object {
@@ -26,5 +28,14 @@ class DataBindingAdapter {
         fun loadProgress(pv: RoundProgressView, progress: Int) {
             pv.progress = progress
         }
+
+        @JvmStatic
+        @BindingAdapter("pickerFont")
+        fun setFontToNumberPicker(np: NumberPicker, font : String) {
+            np.typeface = Typekit.createFromAsset(np.context, font)
+            np.setSelectedTypeface(Typekit.createFromAsset(np.context, font))
+        }
+
     }
 }
+
