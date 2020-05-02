@@ -1,5 +1,6 @@
 package com.buddman1208.ecowell.ui
 
+import androidx.core.os.bundleOf
 import androidx.databinding.Observable
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -100,6 +101,10 @@ class MainViewModel : BaseViewModel() {
 
     fun onHomepageClick() {
         browseToStart.clearAndSet("http://ecowell.co.kr/")
+    }
+
+    fun onSettingClick() {
+        dialogToStart.clearAndSet(Pair(SettingDialogFragment::class, bundleOf()))
     }
 
 }
