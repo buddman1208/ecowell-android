@@ -9,13 +9,17 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 
 abstract class BaseDialogFragment<B : ViewDataBinding, VM : BaseViewModel>(
-    @LayoutRes private val layoutResId: Int
+    @LayoutRes private val layoutResId: Int,
+    private val width : Int = ViewGroup.LayoutParams.MATCH_PARENT
 ) : DialogFragment() {
 
-
     protected abstract val viewModel: VM
-
     protected lateinit var binding: B
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
