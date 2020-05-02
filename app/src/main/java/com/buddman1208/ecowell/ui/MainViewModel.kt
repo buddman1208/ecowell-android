@@ -15,8 +15,7 @@ class MainViewModel : BaseViewModel() {
     val ledLevel: ObservableInt = ObservableInt(0)
     val microCurrentLevel: ObservableInt = ObservableInt(0)
     val galvanicIontoLevel: ObservableInt = ObservableInt(0)
-    //    val progress: ObservableInt = ObservableInt(50)
-    val progress: Int = 90
+    val progress: ObservableInt = ObservableInt(75)
     val isRunning: ObservableBoolean = ObservableBoolean(false)
 
 
@@ -96,6 +95,10 @@ class MainViewModel : BaseViewModel() {
         galvanicIontoLevel.set(
             if (level < 1) level + 1 else 0
         )
+    }
+
+    fun onHomepageClick() {
+        browseToStart.set("http://ecowell.co.kr/")
     }
 
 }
