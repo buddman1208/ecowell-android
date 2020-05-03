@@ -18,8 +18,14 @@ class CommonDialogFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+        applyData()
+    }
 
-        viewModel.dialogContent.set(dialogText)
+    private fun applyData() {
+        viewModel.run {
+            dialogTitle.set(title)
+            dialogContent.set(text)
+        }
     }
 }
 
