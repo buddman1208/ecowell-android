@@ -9,4 +9,5 @@
     <string name="type_1">1</string>
     <string name="type_2">2</string>
     <string name="ask_save">이 설정 [%s]에 저장할까요?</string>
+    <string name="cancel">CANCEL</string>
 </resources>
