@@ -2,12 +2,11 @@ package com.buddman1208.ecowell.ui.setting
 
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
-import androidx.databinding.BindingAdapter
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
+import androidx.databinding.*
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseDialogViewModel
 import com.buddman1208.ecowell.utils.clearAndSet
+import com.shawnlin.numberpicker.NumberPicker
 
 class SettingDialogViewModel : BaseDialogViewModel() {
 
@@ -22,6 +21,24 @@ class SettingDialogViewModel : BaseDialogViewModel() {
     }
 
     companion object {
+        // number-picker
+        @JvmStatic
+        @BindingAdapter("npValue")
+        fun setNumberPickerValue(np : NumberPicker, value : Int) {
+            np.value = value
+        }
+
+        @JvmStatic
+        @InverseBindingAdapter(attribute = "npValue", event = "npValueAttrChanged")
+        fun getNumberPickerValue(np : NumberPicker) : Int = np.value
+
+        @JvmStatic
+        @BindingAdapter("npValueAttrChanged")
+        fun setNumberPickerValueChangedListener(np: NumberPicker, listener: InverseBindingListener) {
+            np.setOnValueChangedListener { _, _, _ -> listener.onChange() }
+        }
+
+        // type select
         @JvmStatic
         @BindingAdapter("selectedValue")
         fun setTextStyleByValue(tv: TextView, value: Int) {
