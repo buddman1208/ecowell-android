@@ -3,15 +3,23 @@ package com.buddman1208.ecowell.ui
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.base.BaseViewModel
+import com.buddman1208.ecowell.utils.clearAndSet
 
 class SettingDialogViewModel : BaseViewModel() {
 
     val settingType: ObservableInt = ObservableInt(1)
 
     fun selectType(value: Int) = settingType.set(value)
+
+    val saveAction: ObservableField<String> = ObservableField("")
+
+    fun onSaveClicked() {
+        saveAction.clearAndSet(settingType.get().toString())
+    }
 
     companion object {
         @JvmStatic

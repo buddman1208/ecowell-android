@@ -189,6 +189,7 @@
             android:paddingEnd="12dp"
             android:paddingBottom="6dp"
             android:text="@string/save"
+            android:onClick="@{() -> vm.onSaveClicked()}"
             android:textColor="#FFF"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
