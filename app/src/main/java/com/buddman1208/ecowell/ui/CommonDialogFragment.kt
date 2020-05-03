@@ -7,7 +7,8 @@ import com.buddman1208.ecowell.base.BaseDialogFragment
 import com.buddman1208.ecowell.databinding.DialogCommonBinding
 
 class CommonDialogFragment(
-    val dialogText : String
+    private val title : String = "",
+    private val text : String = ""
 ) : BaseDialogFragment<DialogCommonBinding, CommonDialogViewModel>(
     R.layout.dialog_common
 ) {
