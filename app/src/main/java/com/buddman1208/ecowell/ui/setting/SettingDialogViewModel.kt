@@ -10,12 +10,17 @@ import com.shawnlin.numberpicker.NumberPicker
 
 class SettingDialogViewModel : BaseDialogViewModel() {
 
-    val settingType: ObservableInt = ObservableInt(1)
+    // level values
+    val ledLevel: ObservableInt = ObservableInt(1)
+    val microCurrentLevel: ObservableInt = ObservableInt(1)
+    val galvanicLevel: ObservableInt = ObservableInt(1)
 
+    // setting type
+    val settingType: ObservableInt = ObservableInt(1)
     fun selectType(value: Int) = settingType.set(value)
 
+    // save action
     val saveAction: ObservableField<String> = ObservableField("")
-
     fun onSaveClicked() {
         saveAction.clearAndSet(settingType.get().toString())
     }
