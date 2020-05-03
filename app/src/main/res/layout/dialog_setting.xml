@@ -68,7 +68,7 @@
                 style="@style/BoldHorizontalPressedText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="LEVEL MAX 3" />
+                android:text="@{@string/max_level(3)}" />
         </LinearLayout>
 
         <View
@@ -111,7 +111,7 @@
                 style="@style/BoldHorizontalPressedText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="LEVEL MAX 5" />
+                android:text="@{@string/max_level(5)}" />
         </LinearLayout>
 
         <View
@@ -154,7 +154,7 @@
                 style="@style/BoldHorizontalPressedText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="LEVEL MAX 1" />
+                android:text="@{@string/max_level(1)}" />
         </LinearLayout>
 
         <TextView
