@@ -1,10 +1,11 @@
-package com.buddman1208.ecowell.ui
+package com.buddman1208.ecowell.ui.productselect
 
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.databinding.ObservableBoolean
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.base.BaseViewModel
+import com.buddman1208.ecowell.ui.main.MainActivity
 import com.buddman1208.ecowell.utils.clearAndSet
 import org.jetbrains.anko.toast
 

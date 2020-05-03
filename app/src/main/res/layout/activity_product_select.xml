@@ -7,13 +7,13 @@
 
         <variable
             name="vm"
-            type="com.buddman1208.ecowell.ui.ProductSelectViewModel" />
+            type="com.buddman1208.ecowell.ui.productselect.ProductSelectViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.ProductSelectActivity">
+        tools:context=".ui.productselect.ProductSelectActivity">
 
         <ImageView
             android:id="@+id/ivLogo"

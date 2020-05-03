@@ -1,4 +1,4 @@
-package com.buddman1208.ecowell.ui
+package com.buddman1208.ecowell.ui.main
 
 import androidx.core.os.bundleOf
 import androidx.databinding.Observable
@@ -7,13 +7,16 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.base.BaseViewModel
+import com.buddman1208.ecowell.ui.setting.SettingDialogFragment
 import com.buddman1208.ecowell.utils.clearAndSet
 
 class MainViewModel : BaseViewModel() {
 
     // Datas
     val isShowTutorial: ObservableBoolean = ObservableBoolean(false)
-    val batteryLevel: ObservableField<BatteryLevel> = ObservableField(BatteryLevel.FULL)
+    val batteryLevel: ObservableField<BatteryLevel> = ObservableField(
+        BatteryLevel.FULL
+    )
     val ledLevel: ObservableInt = ObservableInt(0)
     val microCurrentLevel: ObservableInt = ObservableInt(0)
     val galvanicIontoLevel: ObservableInt = ObservableInt(0)

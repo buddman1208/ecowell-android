@@ -1,9 +1,10 @@
-package com.buddman1208.ecowell
+package com.buddman1208.ecowell.ui.splash
 
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.buddman1208.ecowell.ui.ProductSelectActivity
+import com.buddman1208.ecowell.R
+import com.buddman1208.ecowell.ui.productselect.ProductSelectActivity
 import org.jetbrains.anko.startActivity
 
 class SplashActivity : AppCompatActivity() {

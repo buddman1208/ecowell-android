@@ -1,4 +1,4 @@
-package com.buddman1208.ecowell.ui
+package com.buddman1208.ecowell.ui.commondialog
 
 import android.os.Bundle
 import android.view.View
@@ -13,7 +13,8 @@ class CommonDialogFragment(
     R.layout.dialog_common
 ) {
 
-    override val viewModel: CommonDialogViewModel = CommonDialogViewModel()
+    override val viewModel: CommonDialogViewModel =
+        CommonDialogViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

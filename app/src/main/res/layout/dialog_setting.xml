@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.buddman1208.ecowell.ui.SettingDialogViewModel" />
+            type="com.buddman1208.ecowell.ui.setting.SettingDialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

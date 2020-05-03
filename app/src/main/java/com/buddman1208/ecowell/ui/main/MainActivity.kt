@@ -1,4 +1,4 @@
-package com.buddman1208.ecowell.ui
+package com.buddman1208.ecowell.ui.main
 
 import android.os.Bundle
 import com.buddman1208.ecowell.R
@@ -8,7 +8,8 @@ import com.buddman1208.ecowell.databinding.ActivityMainBinding
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     R.layout.activity_main
 ) {
-    override val viewModel: MainViewModel = MainViewModel()
+    override val viewModel: MainViewModel =
+        MainViewModel()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.buddman1208.ecowell.ui
+package com.buddman1208.ecowell.ui.setting
 
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
@@ -26,8 +26,14 @@ class SettingDialogViewModel : BaseViewModel() {
         @BindingAdapter("selectedValue")
         fun setTextStyleByValue(tv: TextView, value: Int) {
             when (tv.id) {
-                R.id.tvType1 -> setButtonStyle(tv, (value == 1))
-                R.id.tvType2 -> setButtonStyle(tv, (value == 2))
+                R.id.tvType1 -> setButtonStyle(
+                    tv,
+                    (value == 1)
+                )
+                R.id.tvType2 -> setButtonStyle(
+                    tv,
+                    (value == 2)
+                )
             }
         }
 
