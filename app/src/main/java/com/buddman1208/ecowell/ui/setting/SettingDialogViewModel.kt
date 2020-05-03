@@ -26,6 +26,9 @@ class SettingDialogViewModel : BaseDialogViewModel() {
         saveAction.clearAndSet(settingType.get().toString())
     }
 
+    // close action
+    fun onDismissClicked() = dismissEvent.clearAndSet("dismiss")
+
     companion object {
         // type select
         @JvmStatic
