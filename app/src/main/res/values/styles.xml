@@ -43,10 +43,11 @@
         <item name="np_dividerColor">@android:color/transparent</item>
         <item name="np_selectedTextColor">@color/colorHardBlack</item>
         <item name="np_selectedTextSize">40sp</item>
-        <item name="np_textColor">@color/colorCommonBlack</item>
+        <item name="np_textColor">@color/colorGray</item>
         <item name="np_textSize">40sp</item>
         <item name="np_wheelItemCount">3</item>
         <item name="np_wrapSelectorWheel">true</item>
+        <item name="np_fadingEdgeEnabled">false</item>
     </style>
 
 
