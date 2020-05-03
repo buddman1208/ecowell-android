@@ -60,6 +60,7 @@
                 android:layout_marginBottom="4dp"
                 app:np_max="3"
                 app:np_min="1"
+                bind:npValue="@={vm.ledLevel}"
                 bind:pickerFont='@{"NanumSquareBold.ttf"}' />
 
             <TextView
@@ -102,6 +103,7 @@
                 android:layout_marginBottom="4dp"
                 app:np_max="5"
                 app:np_min="1"
+                bind:npValue="@={vm.microCurrentLevel}"
                 bind:pickerFont='@{"NanumSquareBold.ttf"}' />
 
             <TextView
@@ -144,6 +146,7 @@
                 android:layout_marginBottom="4dp"
                 app:np_max="1"
                 app:np_min="1"
+                bind:npValue="@={vm.galvanicLevel}"
                 bind:pickerFont='@{"NanumSquareBold.ttf"}' />
 
             <TextView
@@ -179,13 +182,13 @@
 
         <TextView
             android:id="@+id/tvSave"
+            style="@style/TextButtonPositive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            style="@style/TextButtonPositive"
-            android:text="@string/save"
             android:onClick="@{() -> vm.onSaveClicked()}"
+            android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llLed" />
