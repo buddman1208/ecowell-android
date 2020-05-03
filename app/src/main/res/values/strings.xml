@@ -5,4 +5,7 @@
     <string name="microcurrent">Microcurrent</string>
     <string name="galvanic">Galvanic Ionto</string>
     <string name="setting">SETTING</string>
+    <string name="save">SAVE</string>
+    <string name="type_1">1</string>
+    <string name="type_2">2</string>
 </resources>
