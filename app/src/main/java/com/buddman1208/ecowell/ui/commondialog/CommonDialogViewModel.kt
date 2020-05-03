@@ -1,7 +1,7 @@
 package com.buddman1208.ecowell.ui.commondialog
 
 import androidx.databinding.ObservableField
-import com.buddman1208.ecowell.base.BaseDialogViewModel
+import com.buddman1208.ecowell.ui.base.BaseDialogViewModel
 import com.buddman1208.ecowell.utils.clearAndSet
 
 class CommonDialogViewModel : BaseDialogViewModel() {

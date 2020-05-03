@@ -6,7 +6,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
-import com.buddman1208.ecowell.base.BaseViewModel
+import com.buddman1208.ecowell.ui.base.BaseViewModel
 import com.buddman1208.ecowell.ui.setting.SettingDialogFragment
 import com.buddman1208.ecowell.utils.clearAndSet
 

@@ -1,4 +1,4 @@
-package com.buddman1208.ecowell.base
+package com.buddman1208.ecowell.ui.base
 
 import androidx.databinding.ObservableField
 

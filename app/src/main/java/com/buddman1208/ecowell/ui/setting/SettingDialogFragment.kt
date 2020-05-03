@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.Observable
 import com.buddman1208.ecowell.R
-import com.buddman1208.ecowell.base.BaseDialogFragment
 import com.buddman1208.ecowell.databinding.DialogSettingBinding
+import com.buddman1208.ecowell.ui.base.BaseDialogFragment
 import com.buddman1208.ecowell.ui.commondialog.CommonDialogFragment
 
 class SettingDialogFragment :
@@ -22,7 +22,7 @@ class SettingDialogFragment :
             if (value != null && value.isNotBlank()) {
                 val dialog =
                     CommonDialogFragment(
-                        String.format(resources.getString(R.string.ask_save), value)
+                        text = String.format(resources.getString(R.string.ask_save), value)
                     )
                 dialog.show(requireActivity().supportFragmentManager, "")
             }

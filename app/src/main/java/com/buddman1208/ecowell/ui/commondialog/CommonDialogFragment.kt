@@ -3,8 +3,8 @@ package com.buddman1208.ecowell.ui.commondialog
 import android.os.Bundle
 import android.view.View
 import com.buddman1208.ecowell.R
-import com.buddman1208.ecowell.base.BaseDialogFragment
 import com.buddman1208.ecowell.databinding.DialogCommonBinding
+import com.buddman1208.ecowell.ui.base.BaseDialogFragment
 
 class CommonDialogFragment(
     private val title: String = "",
