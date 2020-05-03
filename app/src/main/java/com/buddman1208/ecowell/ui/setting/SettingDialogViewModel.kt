@@ -6,10 +6,10 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
-import com.buddman1208.ecowell.base.BaseViewModel
+import com.buddman1208.ecowell.base.BaseDialogViewModel
 import com.buddman1208.ecowell.utils.clearAndSet
 
-class SettingDialogViewModel : BaseViewModel() {
+class SettingDialogViewModel : BaseDialogViewModel() {
 
     val settingType: ObservableInt = ObservableInt(1)
 
