@@ -157,88 +157,131 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    style="@style/MajorText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="MODE" />
-
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:paddingLeft="36dp"
-                    android:paddingRight="36dp">
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/tvMode"
+                        style="@style/MajorText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="MODE"
+                        app:layout_constraintBottom_toTopOf="@id/optionContainer"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="@{() -> vm.onLedClick()}"
-                        android:orientation="vertical">
+                        android:id="@+id/optionContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="26dp"
+                        android:paddingRight="26dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvMode">
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:padding="4dp"
-                            app:imageRes="@{vm.ledImg}" />
-
-                        <TextView
-                            style="@style/CommonText"
-                            android:layout_width="match_parent"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/led" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="@{() -> vm.onMicrocurrentClick()}"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:padding="4dp"
-                            app:imageRes="@{vm.microImg}" />
+                            android:onClick="@{() -> vm.onLedClick()}">
 
-                        <TextView
-                            style="@style/CommonText"
-                            android:layout_width="match_parent"
+
+                            <ImageView
+                                android:id="@+id/ivLed"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:padding="4dp"
+                                app:imageRes="@{vm.ledImg}"
+                                app:layout_constraintBottom_toTopOf="@id/tvLed"
+                                app:layout_constraintDimensionRatio="w, 1"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvLed"
+                                style="@style/CommonText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/led"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ivLed" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/microcurrent" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="@{() -> vm.onGalvanicClick()}"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:padding="4dp"
-                            app:imageRes="@{vm.galvanicImg}" />
+                            android:onClick="@{() -> vm.onMicrocurrentClick()}">
 
-                        <TextView
-                            style="@style/CommonText"
-                            android:layout_width="match_parent"
+
+                            <ImageView
+                                android:id="@+id/ivMicro"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:padding="4dp"
+                                app:imageRes="@{vm.microImg}"
+                                app:layout_constraintBottom_toTopOf="@id/tvMicro"
+                                app:layout_constraintDimensionRatio="w, 1"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvMicro"
+                                style="@style/CommonText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/microcurrent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ivMicro" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/galvanic" />
+                            android:layout_weight="1"
+                            android:onClick="@{() -> vm.onGalvanicClick()}">
+
+
+                            <ImageView
+                                android:id="@+id/ivGalvanic"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:padding="4dp"
+                                app:imageRes="@{vm.galvanicImg}"
+                                app:layout_constraintBottom_toTopOf="@id/tvGalvanic"
+                                app:layout_constraintDimensionRatio="w, 1"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvGalvanic"
+                                style="@style/CommonText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/led"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ivGalvanic" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
                     </LinearLayout>
-
-
-                </LinearLayout>
-
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 
@@ -246,8 +289,8 @@
                 android:id="@+id/ivHomepage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
                 android:onClick="@{() -> vm.onHomepageClick()}"
+                android:padding="20dp"
                 android:src="@drawable/ic_homepage_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
