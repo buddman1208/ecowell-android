@@ -1,6 +1,5 @@
 package com.buddman1208.ecowell.ui.base
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.LayoutRes
@@ -9,7 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
-import com.tsengvn.typekit.TypekitContextWrapper
+import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.browse
 
 abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
@@ -20,6 +19,8 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
     protected abstract val viewModel: VM
 
     protected lateinit var binding: B
+
+    protected val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private val newActivityCallback by lazy {
         object : Observable.OnPropertyChangedCallback() {
@@ -67,14 +68,15 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
 
     }
 
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(TypekitContextWrapper.wrap(newBase))
-    }
+//    override fun attachBaseContext(newBase: Context?) {
+//        super.attachBaseContext(TypekitContextWrapper.wrap(newBase))
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.activityToStart.removeOnPropertyChangedCallback(newActivityCallback)
         viewModel.browseToStart.removeOnPropertyChangedCallback(browseCallback)
         viewModel.dialogToStart.removeOnPropertyChangedCallback(newDialogCallback)
+        compositeDisposable.clear()
     }
 }

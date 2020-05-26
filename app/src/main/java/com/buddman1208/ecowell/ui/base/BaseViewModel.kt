@@ -16,7 +16,7 @@ abstract class BaseViewModel : ViewModel() {
     val activityToStart = ObservableField<Pair<KClass<*>, Bundle?>>()
     val dialogToStart = ObservableField<Pair<KClass<*>, Bundle?>>()
     val browseToStart = ObservableField<String>()
-
+    val event : ObservableField<String> = ObservableField<String>("")
 
     protected val mutableErrorTextResId = MutableLiveData<Int>()
     val errorTextResId: LiveData<Int> get() = mutableErrorTextResId

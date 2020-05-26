@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:onClick="@{vm::onTypeSelected}"
-            android:src="@{vm.isLuwell() ? @drawable/btn_select_luwell_enable : @drawable/btn_select_luwell_disable}"
+            android:src="@{vm.luWellAvailable ? @drawable/btn_select_luwell_enable : @drawable/btn_select_luwell_disable}"
             app:layout_constraintBottom_toTopOf="@id/btnConnection"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:onClick="@{vm::onTypeSelected}"
-            android:src="@{vm.isLuwell() ? @drawable/btn_select_ionstone_disable : @drawable/btn_select_ionstone_enable}"
+            android:src="@drawable/btn_select_ionstone_disable"
             app:layout_constraintLeft_toRightOf="@id/btnLuWellSelect"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/btnLuWellSelect" />

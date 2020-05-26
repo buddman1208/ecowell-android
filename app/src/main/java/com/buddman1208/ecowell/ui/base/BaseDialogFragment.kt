@@ -15,7 +15,7 @@ abstract class BaseDialogFragment<B : ViewDataBinding, VM : BaseDialogViewModel>
     private val width: Int = ViewGroup.LayoutParams.MATCH_PARENT
 ) : DialogFragment() {
 
-    protected abstract val viewModel: VM
+    abstract val viewModel: VM
     protected lateinit var binding: B
 
     private val dismissCallback = object : Observable.OnPropertyChangedCallback() {

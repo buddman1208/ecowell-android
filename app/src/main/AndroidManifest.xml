@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.buddman1208.ecowell">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".AppController"
         android:allowBackup="true"
@@ -13,6 +18,11 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,11 +30,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name=".ui.bluetooth.BleDeviceActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.productselect.ProductSelectActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
     </application>
 

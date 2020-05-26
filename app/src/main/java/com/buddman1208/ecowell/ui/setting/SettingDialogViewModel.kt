@@ -7,23 +7,38 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseDialogViewModel
+import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.clearAndSet
 
 class SettingDialogViewModel : BaseDialogViewModel() {
 
     // level values
-    val ledLevel: ObservableInt = ObservableInt(1)
-    val microCurrentLevel: ObservableInt = ObservableInt(1)
+    val ledLevel: ObservableInt = ObservableInt(CredentialManager.instance.setting1.ledLevel)
+    val microCurrentLevel: ObservableInt = ObservableInt(CredentialManager.instance.setting1.microCurrent)
     val galvanicLevel: ObservableInt = ObservableInt(1)
 
     // setting type
     val settingType: ObservableInt = ObservableInt(1)
-    fun selectType(value: Int) = settingType.set(value)
+    fun selectType(value: Int) {
+        settingType.set(value)
+        ledLevel.set(
+            (if(value == 1) CredentialManager.instance.setting1 else CredentialManager.instance.setting2).ledLevel
+        )
+        microCurrentLevel.set(
+            (if(value == 1) CredentialManager.instance.setting1 else CredentialManager.instance.setting2).microCurrent
+        )
+    }
 
     // save action
     val saveAction: ObservableField<String> = ObservableField("")
     fun onSaveClicked() {
         saveAction.clearAndSet(settingType.get().toString())
+    }
+
+    // ok action
+    val okAction: ObservableField<String> = ObservableField("")
+    fun onOkClicked() {
+        okAction.clearAndSet("ok")
     }
 
     // close action
