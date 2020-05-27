@@ -87,22 +87,22 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
-//        validateConnection()
-//        binding.apply {
-//            ivRun.setOnClickListener {
-//                write(
-//                    RequestConverter.playStopRequest(!viewModel.isRunning.get())
-//                )
-//            }
-//        }
-//        settingOkTriggerSubject.subscribe {
-//            write(
-//                RequestConverter.setLedLevel(it.ledLevel, timeLeft / 60, timeLeft % 60)
-//            )
-//            write(
-//                RequestConverter.setExportLevel(it.microCurrent, timeLeft / 60, timeLeft % 60)
-//            )
-//        }.let { compositeDisposable.add(it) }
+        validateConnection()
+        binding.apply {
+            ivRun.setOnClickListener {
+                write(
+                    RequestConverter.playStopRequest(!viewModel.isRunning.get())
+                )
+            }
+        }
+        settingOkTriggerSubject.subscribe {
+            write(
+                RequestConverter.setLedLevel(it.ledLevel, timeLeft / 60, timeLeft % 60)
+            )
+            write(
+                RequestConverter.setExportLevel(it.microCurrent, timeLeft / 60, timeLeft % 60)
+            )
+        }.let { compositeDisposable.add(it) }
     }
 
     private fun validateConnection() {
@@ -126,6 +126,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 runOnUiThread {
                     toast("기기 응답에 연결되었습니다.")
 
+                    viewModel.isBluetoothEnabled.set(true)
                     write(
                         RequestConverter.getAllScanRequest()
                     )
@@ -229,6 +230,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         if (throwable is BleDisconnectedException) {
             toast("블루투스 연결이 해제되었습니다.")
         } else toast("블루투스 연결 중 문제가 발생했습니다.")
+        viewModel.isBluetoothEnabled.set(false)
         startActivity<ProductSelectActivity>()
         finish()
         countTimer?.cancel()

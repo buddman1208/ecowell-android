@@ -1,9 +1,8 @@
 package com.buddman1208.ecowell.ui.main
 
-import androidx.databinding.Observable
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.databinding.*
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseViewModel
 import com.buddman1208.ecowell.utils.clearAndSet
@@ -15,6 +14,7 @@ class MainViewModel : BaseViewModel() {
     val batteryLevel: ObservableField<BatteryLevel> = ObservableField(
         BatteryLevel.FULL
     )
+    val isBluetoothEnabled: ObservableBoolean = ObservableBoolean(false)
     val ledLevel: ObservableInt = ObservableInt(0)
     val microCurrentLevel: ObservableInt = ObservableInt(0)
     val galvanicIontoLevel: ObservableInt = ObservableInt(0)
@@ -26,6 +26,7 @@ class MainViewModel : BaseViewModel() {
 
     // Resources
     var batteryImg: ObservableInt = ObservableInt(R.drawable.img_battery_full)
+    var bluetoothImg: ObservableInt = ObservableInt(R.drawable.ic_bluetooth_disable)
     var ledImg: ObservableInt = ObservableInt(R.drawable.btn_led_off)
     var microImg: ObservableInt = ObservableInt(R.drawable.btn_microcurrent_off)
     var galvanicImg: ObservableInt = ObservableInt(R.drawable.btn_galvanic_off)
@@ -39,6 +40,9 @@ class MainViewModel : BaseViewModel() {
                         BatteryLevel.FULL -> R.drawable.img_battery_full
                         else -> R.drawable.img_battery_no
                     }
+                )
+                bluetoothImg.set(
+                    if (isBluetoothEnabled.get()) R.drawable.ic_bluetooth_enable else R.drawable.ic_bluetooth_disable
                 )
                 ledImg.set(
                     when (ledLevel.get()) {
@@ -70,6 +74,7 @@ class MainViewModel : BaseViewModel() {
             }
         }
 
+        isBluetoothEnabled.addOnPropertyChangedCallback(callback)
         batteryLevel.addOnPropertyChangedCallback(callback)
         ledLevel.addOnPropertyChangedCallback(callback)
         microCurrentLevel.addOnPropertyChangedCallback(callback)
@@ -102,7 +107,7 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun onHomepageClick() {
-        browseToStart.clearAndSet("http://ecowell.co.kr/")
+        browseToStart.clearAndSet("https://cellpod.co.kr/")
     }
 
     fun onSettingClick() {
@@ -110,6 +115,18 @@ class MainViewModel : BaseViewModel() {
         event.clearAndSet("openSetting")
     }
 
+    companion object {
+        @JvmStatic
+        @BindingAdapter("rightImg")
+        fun setRightImage(view: TextView, res: ObservableInt) {
+            view.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                ContextCompat.getDrawable(view.context, res.get())
+                , null
+            )
+        }
+    }
 }
 
 enum class BatteryLevel {
