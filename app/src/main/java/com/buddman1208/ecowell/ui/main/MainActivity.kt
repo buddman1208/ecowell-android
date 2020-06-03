@@ -16,6 +16,7 @@ import com.buddman1208.ecowell.utils.SettingCache
 import com.jakewharton.rx.ReplayingShare
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
+import com.polidea.rxandroidble2.exceptions.BleDisconnectedException
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -45,6 +46,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     val notifyUUID: UUID by lazy {
         intent.getSerializableExtra("notify") as UUID
     }
+
+    private var isCompleteOrErrorOccurred: Boolean = false
 
     private var timeLeft: Int = 0
     private var countTimer: Timer? = null
@@ -88,6 +91,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
         validateConnection()
+        disconnectTriggerSubject
+            .subscribe { compositeDisposable.clear() }
+            .let { compositeDisposable.add(it) }
+
         binding.apply {
             ivRun.setOnClickListener {
                 write(
@@ -142,6 +149,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             }
             .flatMap { it }
             .observeOn(AndroidSchedulers.mainThread())
+            .takeUntil(disconnectTriggerSubject)
             .subscribe(::onNotificationReceived, ::onConnectionError)
             .let { compositeDisposable.add(it) }
 
@@ -166,37 +174,42 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             .compose(ReplayingShare.instance())
 
     private fun onNotificationReceived(bytes: ByteArray) {
-        if(bytes != null && bytes.isNotEmpty()) {
+        if (bytes != null && bytes.isNotEmpty()) {
             Log.e("Asdf", bytes.joinToString(" "))
             Log.e("Asdf", bytes.map { it.toChar() }.joinToString(" "))
             Log.e("noti received", RequestConverter.parseStatus(bytes).toString())
 
             val deviceStatus = RequestConverter.parseStatus(bytes)
-            updateViewModel(deviceStatus)
-            if(deviceStatus?.runMode ?: -1 == 0) {
+
+            if (deviceStatus?.runMode ?: -1 == 0) {
                 // disconnect trigger
-                //
-                disconnectTriggerSubject.onNext("")
-                CommonDialogFragment(
-                    text = "Lu:WELL 사용이 종료되었습니다.",
-                    _positiveCallback = {
-                        startActivity<ProductSelectActivity>()
-                        finish()
-                        countTimer?.cancel()
-                    },
-                    _isOnlyConfirmable = true
-                ).show(supportFragmentManager, "")
+                showDialogAndFinish(MainBluetoothState.COMPLETE)
+
             } else if (getBatteryStatus(deviceStatus?.batteryLevel ?: -1) == BatteryLevel.LOW) {
-                CommonDialogFragment(
-                    text = "배터리 충전이 필요합니다.\n배터리를 확인해주세요.",
-                    _positiveCallback = {
-                        startActivity<ProductSelectActivity>()
-                        finish()
-                        countTimer?.cancel()
-                    },
-                    _isOnlyConfirmable = true
-                ).show(supportFragmentManager, "")
+                showDialogAndFinish(MainBluetoothState.LOW_BATTERY)
             }
+            updateViewModel(deviceStatus)
+        }
+    }
+
+    private fun showDialogAndFinish(state: MainBluetoothState) {
+        if (isCompleteOrErrorOccurred.not()) {
+            disconnectTriggerSubject.onNext("")
+            CommonDialogFragment(
+                text = when (state) {
+                    MainBluetoothState.COMPLETE -> "Lu:WELL 사용이 종료되었습니다."
+                    MainBluetoothState.BLUETOOTH_ERROR -> "블루투스 연결 중 문제가 발생했습니다."
+                    MainBluetoothState.BLUETOOTH_DISCONNECTED -> "블루투스 연결이 해제되었습니다."
+                    MainBluetoothState.LOW_BATTERY -> "배터리 충전이 필요합니다.\n배터리를 확인해주세요."
+                },
+                _positiveCallback = {
+                    startActivity<ProductSelectActivity>()
+                    finish()
+                    countTimer?.cancel()
+                },
+                _isOnlyConfirmable = true
+            ).show(supportFragmentManager, "")
+            isCompleteOrErrorOccurred = true
         }
     }
 
@@ -204,14 +217,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         deviceStatus?.run {
             viewModel.batteryLevel.set(getBatteryStatus(batteryLevel))
             viewModel.ledLevel.set(
-                if(runMode != 4) ledLevel
+                if (runMode != 4) ledLevel
                 else 0
             )
             viewModel.microCurrentLevel.set(
-                if(runMode == 1) exportLevel else 0
+                if (runMode == 1) exportLevel else 0
             )
             viewModel.galvanicIontoLevel.set(
-                if(runMode == 2) 1 else 0
+                if (runMode == 2) 1 else 0
             )
             viewModel.isRunning.set(isRunning)
             if (countTimer == null) updateTimer(
@@ -257,15 +270,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun onConnectionError(throwable: Throwable) {
-        disconnectTriggerSubject.onNext("")
-//        if (throwable is BleDisconnectedException) {
-//            toast("블루투스 연결이 해제되었습니다.")
-//        } else toast("블루투스 연결 중 문제가 발생했습니다.")
-//        viewModel.isBluetoothEnabled.set(false)
-//        startActivity<ProductSelectActivity>()
-//        finish()
-//        countTimer?.cancel()
-//        throwable.printStackTrace()
+        if (throwable is BleDisconnectedException) {
+            showDialogAndFinish(MainBluetoothState.BLUETOOTH_DISCONNECTED)
+        } else showDialogAndFinish(MainBluetoothState.BLUETOOTH_ERROR)
     }
 
     override fun onPause() {
@@ -284,4 +291,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     }
 
+}
+
+enum class MainBluetoothState {
+    COMPLETE,
+    BLUETOOTH_ERROR,
+    BLUETOOTH_DISCONNECTED,
+    LOW_BATTERY
 }
