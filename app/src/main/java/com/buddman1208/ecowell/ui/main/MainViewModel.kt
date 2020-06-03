@@ -36,7 +36,7 @@ class MainViewModel : BaseViewModel() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 batteryImg.set(
                     when (batteryLevel.get()) {
-                        BatteryLevel.NO -> R.drawable.img_battery_no
+                        BatteryLevel.LOW -> R.drawable.img_battery_low
                         BatteryLevel.FULL -> R.drawable.img_battery_full
                         else -> R.drawable.img_battery_no
                     }
@@ -130,5 +130,5 @@ class MainViewModel : BaseViewModel() {
 }
 
 enum class BatteryLevel {
-    NO, FULL
+    NO, LOW, FULL
 }

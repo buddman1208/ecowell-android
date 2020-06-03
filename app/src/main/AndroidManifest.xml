@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.splash.SplashActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,15 +26,18 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
         </activity>
         <activity
             android:name=".ui.bluetooth.BleDeviceActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.productselect.ProductSelectActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
     </application>

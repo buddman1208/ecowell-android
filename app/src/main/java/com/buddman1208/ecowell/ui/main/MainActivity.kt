@@ -1,6 +1,7 @@
 package com.buddman1208.ecowell.ui.main
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.ActivityMainBinding
@@ -15,7 +16,6 @@ import com.buddman1208.ecowell.utils.SettingCache
 import com.jakewharton.rx.ReplayingShare
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
-import com.polidea.rxandroidble2.exceptions.BleDisconnectedException
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -34,7 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private lateinit var bleDevice: RxBleDevice
-    private val disconnectTriggerSubject = PublishSubject.create<Unit>()
+    private val disconnectTriggerSubject = PublishSubject.create<String>()
 
     private lateinit var bleObservable: Observable<RxBleConnection>
 
@@ -99,9 +99,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             write(
                 RequestConverter.setLedLevel(it.ledLevel, timeLeft / 60, timeLeft % 60)
             )
-            write(
-                RequestConverter.setExportLevel(it.microCurrent, timeLeft / 60, timeLeft % 60)
-            )
+            Handler().postDelayed({
+                write(
+                    RequestConverter.setExportLevel(it.microCurrent, timeLeft / 60, timeLeft % 60)
+                )
+                Handler().postDelayed({
+                    write(
+                        RequestConverter.setParameterSaveEnabled(true)
+                    )
+                }, 100)
+            }, 100)
+
         }.let { compositeDisposable.add(it) }
     }
 
@@ -158,38 +166,53 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             .compose(ReplayingShare.instance())
 
     private fun onNotificationReceived(bytes: ByteArray) {
-        Log.e("Asdf", bytes.joinToString(" "))
-        Log.e("Asdf", bytes.map { it.toChar() }.joinToString(" "))
-        Log.e("Asdf", RequestConverter.parseStatus(bytes).toString())
+        if(bytes != null && bytes.isNotEmpty()) {
+            Log.e("Asdf", bytes.joinToString(" "))
+            Log.e("Asdf", bytes.map { it.toChar() }.joinToString(" "))
+            Log.e("noti received", RequestConverter.parseStatus(bytes).toString())
 
-        val deviceStatus = RequestConverter.parseStatus(bytes)
-        updateViewModel(deviceStatus)
-        // Battery NO
-        if (deviceStatus?.batteryMode == 2) {
-            CommonDialogFragment(
-                text = "배터리 충전이 필요합니다.\n배터리를 확인해주세요.",
-                _positiveCallback = {
-                    startActivity<ProductSelectActivity>()
-                    finish()
-                    countTimer?.cancel()
-                },
-                _isOnlyConfirmable = true
-            ).show(supportFragmentManager, "")
+            val deviceStatus = RequestConverter.parseStatus(bytes)
+            updateViewModel(deviceStatus)
+            if(deviceStatus?.runMode ?: -1 == 0) {
+                // disconnect trigger
+                //
+                disconnectTriggerSubject.onNext("")
+                CommonDialogFragment(
+                    text = "Lu:WELL 사용이 종료되었습니다.",
+                    _positiveCallback = {
+                        startActivity<ProductSelectActivity>()
+                        finish()
+                        countTimer?.cancel()
+                    },
+                    _isOnlyConfirmable = true
+                ).show(supportFragmentManager, "")
+            } else if (getBatteryStatus(deviceStatus?.batteryLevel ?: -1) == BatteryLevel.LOW) {
+                CommonDialogFragment(
+                    text = "배터리 충전이 필요합니다.\n배터리를 확인해주세요.",
+                    _positiveCallback = {
+                        startActivity<ProductSelectActivity>()
+                        finish()
+                        countTimer?.cancel()
+                    },
+                    _isOnlyConfirmable = true
+                ).show(supportFragmentManager, "")
+            }
         }
     }
 
     private fun updateViewModel(deviceStatus: EcoWellStatus?) {
         deviceStatus?.run {
-            viewModel.batteryLevel.set(
-                when (batteryMode) {
-                    1 -> BatteryLevel.FULL
-                    2 -> BatteryLevel.NO
-                    else -> BatteryLevel.NO
-                }
+            viewModel.batteryLevel.set(getBatteryStatus(batteryLevel))
+            viewModel.ledLevel.set(
+                if(runMode != 4) ledLevel
+                else 0
             )
-            viewModel.ledLevel.set(ledLevel)
-            viewModel.microCurrentLevel.set(exportLevel)
-            viewModel.galvanicIontoLevel.set(1)
+            viewModel.microCurrentLevel.set(
+                if(runMode == 1) exportLevel else 0
+            )
+            viewModel.galvanicIontoLevel.set(
+                if(runMode == 2) 1 else 0
+            )
             viewModel.isRunning.set(isRunning)
             if (countTimer == null) updateTimer(
                 if (minute != -1 && second != -1) minute * 60 + second else MIN_20
@@ -226,15 +249,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         viewModel.progress.set(progress)
     }
 
+    private fun getBatteryStatus(batteryLevel: Int): BatteryLevel {
+        return when {
+            batteryLevel > 7 -> BatteryLevel.FULL
+            else -> BatteryLevel.LOW
+        }
+    }
+
     private fun onConnectionError(throwable: Throwable) {
-        if (throwable is BleDisconnectedException) {
-            toast("블루투스 연결이 해제되었습니다.")
-        } else toast("블루투스 연결 중 문제가 발생했습니다.")
-        viewModel.isBluetoothEnabled.set(false)
-        startActivity<ProductSelectActivity>()
-        finish()
-        countTimer?.cancel()
-        throwable.printStackTrace()
+        disconnectTriggerSubject.onNext("")
+//        if (throwable is BleDisconnectedException) {
+//            toast("블루투스 연결이 해제되었습니다.")
+//        } else toast("블루투스 연결 중 문제가 발생했습니다.")
+//        viewModel.isBluetoothEnabled.set(false)
+//        startActivity<ProductSelectActivity>()
+//        finish()
+//        countTimer?.cancel()
+//        throwable.printStackTrace()
     }
 
     override fun onPause() {

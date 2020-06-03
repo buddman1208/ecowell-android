@@ -20,7 +20,7 @@ object RequestConverter {
         val minute = String.format("%02d", min(20, _minute))
         val second = String.format("%02d", min(59, _second))
         val level = min(exportLevel, 5)
-        val data = "X7O:${level}${minute}${second}}"
+        val data = "X7O:${level}${minute}${second}"
         return data.toRequest()
     }
 
@@ -68,7 +68,7 @@ object RequestConverter {
         if(returnValue.size > 4) {
             val result = returnValue.map { it.toChar().toString() }.subList(3, returnValue.size)
             val isParsable = result.size >= 8
-            val isTimeServed = isParsable && result.size == 12
+            val isTimeServed = isParsable && result.size == 15
             return EcoWellStatus(
                 isRunning = when(result[1]) {
                     "1" -> true
@@ -79,12 +79,16 @@ object RequestConverter {
                 ledLevel = result[3].toIntOrNull(16) ?: -1,
                 runningTimeLevel = result[4].toIntOrNull(16) ?: -1,
                 runMode = result[5].toIntOrNull(16) ?: -1,
-                batteryMode = result[6].toIntOrNull(16) ?: -1,
+                batteryLevel = result[6].toIntOrNull(16) ?: -1,
                 minute = if(isTimeServed) {
-                    (result[8] + result[9]).toIntOrNull() ?: -1
+                    val min0 = result[8].toIntOrNull(16) ?: -1
+                    val min1 = result[9].toIntOrNull(16) ?: -1
+                    min0 * 10 + min1
                 } else -1,
                 second = if(isTimeServed) {
-                    (result[10] + result[11]).toIntOrNull() ?: -1
+                    val sec0 = result[10].toIntOrNull(16) ?: -1
+                    val sec1 = result[11].toIntOrNull(16) ?: -1
+                    sec0 * 10 + sec1
                 } else -1
             )
         } else return null
@@ -107,7 +111,7 @@ data class EcoWellStatus(
     var ledLevel: Int,
     var runningTimeLevel: Int,
     var runMode: Int,
-    var batteryMode: Int,
+    var batteryLevel: Int,
     var minute: Int,
     var second: Int
 )

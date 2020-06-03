@@ -11,12 +11,11 @@ import com.buddman1208.ecowell.ui.main.MainActivity
 import com.buddman1208.ecowell.utils.BLEController
 import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.DeviceCache
-import com.polidea.rxandroidble2.exceptions.BleScanException
 import com.polidea.rxandroidble2.scan.ScanResult
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.longToast
 import java.util.*
 
 class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, ProductSelectViewModel>(
@@ -65,9 +64,10 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
             .takeUntil(onSearchCompleteSubject)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(::updateTarget) {
-                if (it is BleScanException) {
-                    toast("블루투스를 허용해주세요.")
-                }
+//                if (it is BleScanException) {
+////                    toast("블루투스를 허용해주세요.")
+////                }
+                longToast(it.message.toString())
             }
             .let { compositeDisposable.add(it) }
     }
