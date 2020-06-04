@@ -2,6 +2,7 @@ package com.buddman1208.ecowell.ui.productselect
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.os.ConfigurationCompat
 import androidx.databinding.Observable
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.ActivityProductSelectBinding
@@ -11,17 +12,17 @@ import com.buddman1208.ecowell.ui.main.MainActivity
 import com.buddman1208.ecowell.utils.BLEController
 import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.DeviceCache
+import com.buddman1208.ecowell.utils.LocaleWrapper
 import com.polidea.rxandroidble2.scan.ScanResult
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.longToast
 import java.util.*
 
 class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, ProductSelectViewModel>(
     R.layout.activity_product_select
 ) {
-    override val viewModel: ProductSelectViewModel =
+    override var viewModel: ProductSelectViewModel =
         ProductSelectViewModel()
 
     val onSearchCompleteSubject: PublishSubject<String> = PublishSubject.create()
@@ -50,9 +51,20 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
                         )
                         finish()
                     }
+                    "onKoreanSelected" -> {
+                        changeLanguage("ko")
+                    }
+                    "onEnglishSelected" -> {
+                        changeLanguage("en")
+                    }
                 }
             }
         }
+    }
+
+    private fun changeLanguage(language: String) {
+        LocaleWrapper.setLocale(language)
+        recreate()
     }
 
     private fun subscribeDevices() {
@@ -65,9 +77,9 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(::updateTarget) {
 //                if (it is BleScanException) {
-////                    toast("블루투스를 허용해주세요.")
-////                }
-                longToast(it.message.toString())
+//                    toast("블루투스를 허용해주세요.")
+//                }
+//                longToast(it.message.toString())
             }
             .let { compositeDisposable.add(it) }
     }
@@ -87,6 +99,9 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
 
         deviceCache = CredentialManager.instance.deviceCache
         subscribeDevices()
+
+        val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
+        viewModel.isKorean.set(locale.language == "ko")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -112,4 +127,5 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
         viewModel.event.removeOnPropertyChangedCallback(eventCallback)
         super.onDestroy()
     }
+
 }

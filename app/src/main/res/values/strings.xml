@@ -2,15 +2,40 @@
     <string name="app_name">EcoWell</string>
     <string name="toolbar_title">Lu±Well</string>
     <string name="led">LED</string>
-    <string name="microcurrent">Microcurrent</string>
-    <string name="galvanic">Galvanic Ionto</string>
-    <string name="setting">SETTING</string>
-    <string name="save">SAVE</string>
-    <string name="ok"> OK </string>
+    <string name="microcurrent">미세전류</string>
+    <string name="galvanic">갈바닉 이온토</string>
+    <string name="setting">설정</string>
+    <string name="save">저장</string>
+    <string name="ok"> 확인 </string>
     <string name="type_1">1</string>
     <string name="type_2">2</string>
     <string name="ask_save">이 설정 [%s]에 저장할까요?</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel">취소</string>
     <string name="max_level" formatted="false">LEVEL MAX %d</string>
+    <string name="ecowell_product_select">ecowell 제품선택</string>
+    <string name="bluetooth_connection">블루투스 연결</string>
+    <string name="app_guide">어플리케이션 안내 화면</string>
+    <string name="product_name">제품명</string>
+    <string name="battery_text">배터리</string>
+    <string name="battery">기기 배터리</string>
+    <string name="care_info">케어 진행상황을 알려줍니다.\n터치로 \'일시정지\' 할 수 있습니다.\n일시정지 2분 뒤, 자동종료 됩니다.\n\n시간 카운트가 표시됩니다.</string>
+    <string name="mode_info">진행 중인 모드를 보여줍니다.\n터치하면 레벨을 조절할 수 있습니다.</string>
+    <string name="site_link">사이트 링크</string>
+    <string name="device_setting">기기 설정</string>
+    <string name="connecting">기기에 연결중입니다.</string>
+    <string name="connected">기기에 연결되었습니다.</string>
+    <string name="connected_alert">기기 알림에 연결되었습니다.</string>
+    <string name="operation_completed">사용이 완료되었습니다.</string>
+    <string name="bluetooth_error">블루투스 연결 중 문제가 발생했습니다.</string>
+    <string name="bluetooth_disconnected">블루투스 연결이 끊어졌습니다.\n연결을 확인해주세요.</string>
+    <string name="low_battery">배터리 충전이 필요합니다.\n배터리를 확인해주세요.</string>
+    <string name="bluetooth">블루투스</string>
+    <string name="language">언어</string>
+    <string name="confirm_setting">현재 설정으로 진행할까요?</string>
+    <string name="search_device">기기 검색</string>
+    <string name="request_bluetooth_on">블루투스를 허용해주세요.</string>
+    <string name="no_device_connected">연결된 기기가 없습니다.</string>
+    <string name="request_permission">앱 사용을 위해서 권한을 허용해 주세요</string>
+    <string name="request_permission_when_denied">권한을 허용하셔야 앱 사용이 가능합니다.</string>
 
 </resources>

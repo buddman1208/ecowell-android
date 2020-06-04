@@ -9,6 +9,7 @@ import com.buddman1208.ecowell.utils.clearAndSet
 
 class MainViewModel : BaseViewModel() {
 
+    val isKorean: ObservableBoolean = ObservableBoolean(true)
     // Datas
     val isShowTutorial: ObservableBoolean = ObservableBoolean(false)
     val batteryLevel: ObservableField<BatteryLevel> = ObservableField(

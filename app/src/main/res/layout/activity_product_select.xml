@@ -15,6 +15,19 @@
         android:layout_height="match_parent"
         tools:context=".ui.productselect.ProductSelectActivity">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorCommonBlack"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/ecowell_product_select"
+            android:textColor="#FFF"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/ivLogo"
             android:layout_width="wrap_content"
@@ -68,16 +81,48 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:drawableLeft="@drawable/ic_bluetooth_svgrepo_com"
-                android:drawablePadding="8dp"
+                android:drawablePadding="4dp"
                 android:gravity="center"
+                android:padding="4dp"
                 android:src="@drawable/btn_bluetooth_connect"
-                android:text="Bluetooth Connection"
+                android:text="@string/bluetooth_connection"
                 android:textAlignment="center"
                 android:textColor="#FFF"
                 android:textStyle="bold" />
 
         </RelativeLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/language"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@id/ivKorean"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
+        <ImageView
+            android:id="@+id/ivKorean"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="25dp"
+            android:onClick="@{() -> vm.onKoreanSelected()}"
+            android:src="@{vm.isKorean() ? @drawable/ic_korean_selected : @drawable/ic_korean_not_selected}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/ivEnglish" />
+
+        <ImageView
+            android:id="@+id/ivEnglish"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="16dp"
+            android:onClick="@{() -> vm.onEnglishSelected()}"
+            android:src="@{vm.isKorean() ? @drawable/ic_english_not_selected : @drawable/ic_english_selected}"
+            app:layout_constraintBottom_toBottomOf="@id/ivKorean"
+            app:layout_constraintLeft_toRightOf="@id/ivKorean"
+            app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -3,6 +3,7 @@ package com.buddman1208.ecowell.ui.setting
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
@@ -12,6 +13,7 @@ import com.buddman1208.ecowell.utils.clearAndSet
 
 class SettingDialogViewModel : BaseDialogViewModel() {
 
+    val isKorean: ObservableBoolean = ObservableBoolean(true)
     // level values
     val ledLevel: ObservableInt = ObservableInt(CredentialManager.instance.setting1.ledLevel)
     val microCurrentLevel: ObservableInt = ObservableInt(CredentialManager.instance.setting1.microCurrent)

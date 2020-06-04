@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">EcoWell</string>
+    <string name="toolbar_title">Lu±Well</string>
+    <string name="led">LED</string>
+    <string name="microcurrent">Microcurrent</string>
+    <string name="galvanic">Galvanic Ionto</string>
+    <string name="setting">SETTING</string>
+    <string name="save">SAVE</string>
+    <string name="ok"> OK </string>
+    <string name="type_1">1</string>
+    <string name="type_2">2</string>
+    <string name="ask_save">Save these settings to [%s]?</string>
+    <string name="cancel">CANCEL</string>
+    <string name="max_level" formatted="false">LEVEL MAX %d</string>
+    <string name="ecowell_product_select">ecowell Product Select</string>
+    <string name="bluetooth_connection">Bluetooth Connection</string>
+    <string name="app_guide">Application Guide</string>
+    <string name="product_name">Product Name</string>
+    <string name="battery_text">Battery</string>
+    <string name="battery">Battery Status</string>
+    <string name="care_info">This Informs the progress of care.\nYou can \'pause\' with the touch.\nIt will be automatically terminated in 2 minutes after the pause.\n\nThe remaining time is displayed.</string>
+    <string name="mode_info">Shows the mode in progress.</string>
+    <string name="site_link">Site Link</string>
+    <string name="device_setting">Device Setting</string>
+    <string name="connecting">Connecting to device…</string>
+    <string name="connected">Connected to device.</string>
+    <string name="connected_alert">Connected to device notification.</string>
+    <string name="operation_completed">Operation completed.</string>
+    <string name="bluetooth_error">An error occurred while connecting to bluetooth.</string>
+    <string name="bluetooth_disconnected">Bluetooth disconnected.\nPlease check the connection.</string>
+    <string name="low_battery">Battery charging is required.\nPlease check the battery.</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="language">Language</string>
+    <string name="confirm_setting">Proceed with the current setting?</string>
+    <string name="search_device">Search device…</string>
+    <string name="request_bluetooth_on">Bluetooth must be turned on to use this service.</string>
+    <string name="no_device_connected">Please connect to device first.</string>
+    <string name="request_permission">Please allow following permissions to use application.</string>
+    <string name="request_permission_when_denied">All permissions must be allowed to use application.</string>
+
+</resources>

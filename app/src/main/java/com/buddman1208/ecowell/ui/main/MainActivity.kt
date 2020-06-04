@@ -3,6 +3,7 @@ package com.buddman1208.ecowell.ui.main
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import androidx.core.os.ConfigurationCompat
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.ActivityMainBinding
 import com.buddman1208.ecowell.ui.base.BaseActivity
@@ -90,6 +91,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
+        viewModel.isKorean.set(ConfigurationCompat.getLocales(resources.configuration)[0].language == "ko")
+
         validateConnection()
         disconnectTriggerSubject
             .subscribe { compositeDisposable.clear() }
@@ -129,9 +132,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             .flatMapSingle { it.discoverServices() }
             .flatMapSingle { it.getCharacteristic(notifyUUID) }
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { toast("기기에 연결중입니다.") }
+            .doOnSubscribe { toast(resources.getString(R.string.connecting)) }
             .subscribe({
-                toast("기기에 연결되었습니다.")
+                toast(resources.getString(R.string.connected))
             }, ::onConnectionError)
             .let { compositeDisposable.add(it) }
 
@@ -139,7 +142,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             .flatMap { it.setupNotification(notifyUUID) }
             .doOnNext {
                 runOnUiThread {
-                    toast("기기 응답에 연결되었습니다.")
+                    toast(resources.getString(R.string.connected_alert))
 
                     viewModel.isBluetoothEnabled.set(true)
                     write(
@@ -197,10 +200,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             disconnectTriggerSubject.onNext("")
             CommonDialogFragment(
                 text = when (state) {
-                    MainBluetoothState.COMPLETE -> "Lu:WELL 사용이 종료되었습니다."
-                    MainBluetoothState.BLUETOOTH_ERROR -> "블루투스 연결 중 문제가 발생했습니다."
-                    MainBluetoothState.BLUETOOTH_DISCONNECTED -> "블루투스 연결이 해제되었습니다."
-                    MainBluetoothState.LOW_BATTERY -> "배터리 충전이 필요합니다.\n배터리를 확인해주세요."
+                    MainBluetoothState.COMPLETE -> resources.getString(R.string.operation_completed)
+                    MainBluetoothState.BLUETOOTH_ERROR -> resources.getString(R.string.bluetooth_error)
+                    MainBluetoothState.BLUETOOTH_DISCONNECTED -> resources.getString(R.string.bluetooth_disconnected)
+                    MainBluetoothState.LOW_BATTERY -> resources.getString(R.string.low_battery)
                 },
                 _positiveCallback = {
                     startActivity<ProductSelectActivity>()

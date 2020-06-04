@@ -49,8 +49,8 @@ class SplashActivity : AppCompatActivity() {
                     finish()
                 }
             })
-            .setRationaleMessage("앱 사용을 위해서 권한을 허용해 주세요")
-            .setDeniedMessage("권한을 허용하셔야 앱 사용이 가능합니다.")
+            .setRationaleMessage(resources.getString(R.string.request_permission))
+            .setDeniedMessage(resources.getString(R.string.request_permission_when_denied))
             .setPermissions(
                 Manifest.permission.BLUETOOTH,
                 Manifest.permission.ACCESS_FINE_LOCATION,

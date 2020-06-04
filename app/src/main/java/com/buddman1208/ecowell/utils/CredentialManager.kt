@@ -22,6 +22,14 @@ class CredentialManager private constructor() {
         editor = preferences.edit()
     }
 
+    var language: String
+        set(value) {
+            editor.putString("language", value).apply()
+        }
+        get() {
+            return preferences.getString("language", "ko") ?: "ko"
+        }
+
     var setting1: SettingCache
         set(value) {
             editor

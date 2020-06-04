@@ -50,7 +50,7 @@
             style="@style/InfoTextWithIcons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bluetooth"
+            android:text="@string/bluetooth"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:drawablePadding="@dimen/drawable_padding"
-            android:text="Battery"
+            android:text="@string/battery_text"
             app:iconOnRight="@{vm.batteryImg}"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintRight_toRightOf="parent"
@@ -121,7 +121,7 @@
                     android:id="@+id/ivRun"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:src="@{vm.isRunning() ? @drawable/pic_timer_stop : @drawable/pic_timer_play}"
+                    android:src="@{vm.isRunning() ? (vm.isKorean() ? @drawable/ic_timer_running_kor : @drawable/ic_timer_running_eng) : (vm.isKorean() ? @drawable/ic_timer_pause_kor : @drawable/ic_timer_pause_eng)}"
                     app:layout_constraintBottom_toBottomOf="@id/glBottom"
                     app:layout_constraintDimensionRatio="h, 1"
                     app:layout_constraintLeft_toLeftOf="@id/glLeft"
@@ -322,7 +322,7 @@
             style="@style/TutorialText"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="제품명"
+            android:text="@string/product_name"
             app:layout_constraintBottom_toBottomOf="@id/toolbar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -334,7 +334,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
-            android:text="어플리케이션 안내 화면"
+            android:text="@string/app_guide"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivGuide" />
@@ -345,7 +345,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
-            android:text="블루투스 연결"
+            android:text="@string/bluetooth_connection"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -357,7 +357,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginRight="16dp"
-            android:text="기기 배터리"
+            android:text="@string/battery"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivGuide" />
@@ -376,7 +376,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:text="케어 진행상황을 알려줍니다.\n터치로 '일시정지' 할 수 있습니다.\n\n시간 카운트가 표시됩니다." />
+                android:text="@string/care_info" />
 
             <TextView
                 android:id="@+id/ttMode"
@@ -385,7 +385,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:paddingTop="16dp"
-                android:text="진행 중인 모드를 보여줍니다.\n터치하면 레벨을 조절할 수 있습니다." />
+                android:text="@string/mode_info" />
         </LinearLayout>
 
         <TextView
@@ -394,7 +394,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginRight="16dp"
-            android:text="에코웰 사이트 이동"
+            android:text="@string/site_link"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -406,7 +406,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginRight="16dp"
-            android:text="기기 설정"
+            android:text="@string/device_setting"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivHomepage" />

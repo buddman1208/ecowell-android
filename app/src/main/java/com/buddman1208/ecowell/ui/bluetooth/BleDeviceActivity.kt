@@ -34,7 +34,7 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "기기 검색"
+        supportActionBar?.title = resources.getString(R.string.search_device)
 
         initBleList()
         initList()
@@ -50,7 +50,7 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(::updateList) {
                     if (it is BleScanException) {
-                        toast("블루투스를 허용해주세요.")
+                        toast(resources.getString(R.string.request_bluetooth_on))
                         finish()
                     }
                 }
@@ -92,7 +92,7 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
                             returnSelected(mac, write, notify)
                         }, {
                             if (it is BleScanException) {
-                                toast("블루투스를 허용해주세요.")
+                                toast(resources.getString(R.string.request_bluetooth_on))
                                 finish()
                             } else {
                                 it.printStackTrace()

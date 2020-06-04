@@ -94,7 +94,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_microcurrent" />
+                android:src="@{vm.isKorean() ? @drawable/ic_microcurrent_kor : @drawable/ic_microcurrent}" />
 
             <com.shawnlin.numberpicker.NumberPicker
                 style="@style/CommonNumberPicker"
@@ -137,7 +137,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_galvanic" />
+                android:src="@{vm.isKorean() ? @drawable/ic_galvanic_kor : @drawable/ic_galvanic}" />
 
             <com.shawnlin.numberpicker.NumberPicker
                 style="@style/CommonNumberPicker"

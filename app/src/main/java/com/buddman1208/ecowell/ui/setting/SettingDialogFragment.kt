@@ -2,6 +2,7 @@ package com.buddman1208.ecowell.ui.setting
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.ConfigurationCompat
 import androidx.databinding.Observable
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.DialogSettingBinding
@@ -48,7 +49,7 @@ class SettingDialogFragment :
             val value = viewModel.okAction.get()
             if (value != null && value.isNotBlank()) {
                 CommonDialogFragment(
-                    text = "현재 설정으로 진행할까요?",
+                    text = resources.getString(R.string.confirm_setting),
                     _positiveCallback = {
                         MainActivity.settingOkTriggerSubject.onNext(
                             SettingCache(
@@ -68,6 +69,7 @@ class SettingDialogFragment :
         binding.vm = viewModel
         viewModel.saveAction.addOnPropertyChangedCallback(callback)
         viewModel.okAction.addOnPropertyChangedCallback(okCallback)
+        viewModel.isKorean.set(ConfigurationCompat.getLocales(resources.configuration)[0].language == "ko")
     }
 
     override fun onDestroy() {

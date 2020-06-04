@@ -1,5 +1,6 @@
 package com.buddman1208.ecowell.ui.base
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.LayoutRes
@@ -8,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
+import com.buddman1208.ecowell.utils.LocaleWrapper
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.browse
 
@@ -71,6 +73,10 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(
 //    override fun attachBaseContext(newBase: Context?) {
 //        super.attachBaseContext(TypekitContextWrapper.wrap(newBase))
 //    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocaleWrapper.wrap(newBase))
+    }
 
     override fun onDestroy() {
         super.onDestroy()
