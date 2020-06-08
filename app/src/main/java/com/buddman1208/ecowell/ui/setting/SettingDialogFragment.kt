@@ -37,6 +37,14 @@ class SettingDialogFragment :
                             } else {
                                 CredentialManager.instance.setting2 = save
                             }
+
+                            MainActivity.settingOkTriggerSubject.onNext(
+                                SettingCache(
+                                    ledLevel = viewModel.ledLevel.get(),
+                                    microCurrent = viewModel.microCurrentLevel.get()
+                                )
+                            )
+                            dismiss()
                         }
                     )
                 dialog.show(requireActivity().supportFragmentManager, "")
@@ -46,21 +54,21 @@ class SettingDialogFragment :
 
     private val okCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            val value = viewModel.okAction.get()
-            if (value != null && value.isNotBlank()) {
-                CommonDialogFragment(
-                    text = resources.getString(R.string.confirm_setting),
-                    _positiveCallback = {
-                        MainActivity.settingOkTriggerSubject.onNext(
-                            SettingCache(
-                                ledLevel = viewModel.ledLevel.get(),
-                                microCurrent = viewModel.microCurrentLevel.get()
-                            )
-                        )
-                        dismiss()
-                    }
-                ).show(requireActivity().supportFragmentManager, "")
-            }
+//            val value = viewModel.okAction.get()
+//            if (value != null && value.isNotBlank()) {
+//                CommonDialogFragment(
+//                    text = resources.getString(R.string.confirm_setting),
+//                    _positiveCallback = {
+//                        MainActivity.settingOkTriggerSubject.onNext(
+//                            SettingCache(
+//                                ledLevel = viewModel.ledLevel.get(),
+//                                microCurrent = viewModel.microCurrentLevel.get()
+//                            )
+//                        )
+//                        dismiss()
+//                    }
+//                ).show(requireActivity().supportFragmentManager, "")
+//            }
         }
     }
 

@@ -82,6 +82,44 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                         "openSetting" -> {
                             settingInstance.show(supportFragmentManager, "")
                         }
+                        "onLedClick" -> {
+                            val level = viewModel.ledLevel.get()
+                            if (level > 0) {
+                                val targetLedLevel = if (level < 3) level + 1 else 1
+                                write(
+                                    RequestConverter.setLedLevel(
+                                        targetLedLevel,
+                                        timeLeft / 60,
+                                        timeLeft % 60
+                                    )
+                                )
+                                Handler().postDelayed({
+                                    write(
+                                        RequestConverter.setParameterSaveEnabled(true)
+                                    )
+                                }, 100)
+                            }
+                        }
+                        "onMicroCurrentClick" -> {
+                            val level = viewModel.microCurrentLevel.get()
+                            if (level > 0) {
+                                val targetMicroCurrentLevel = if (level < 5) level + 1 else 1
+                                write(
+                                    RequestConverter.setExportLevel(
+                                        targetMicroCurrentLevel,
+                                        timeLeft / 60,
+                                        timeLeft % 60
+                                    )
+                                )
+                                Handler().postDelayed({
+                                    write(
+                                        RequestConverter.setParameterSaveEnabled(true)
+                                    )
+                                }, 100)
+                            }
+                        }
+                        else -> {
+                        }
                     }
                 }
             }
@@ -101,7 +139,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         binding.apply {
             ivRun.setOnClickListener {
                 write(
-                    RequestConverter.playStopRequest(!viewModel.isRunning.get())
+                    RequestConverter.playStopRequest(!viewModel.isRunning.get(), timeLeft / 60, timeLeft % 60)
                 )
             }
         }
@@ -132,10 +170,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
             .flatMapSingle { it.discoverServices() }
             .flatMapSingle { it.getCharacteristic(notifyUUID) }
             .observeOn(AndroidSchedulers.mainThread())
+            .takeUntil(disconnectTriggerSubject)
             .doOnSubscribe { toast(resources.getString(R.string.connecting)) }
             .subscribe({
                 toast(resources.getString(R.string.connected))
-            }, ::onConnectionError)
+            }, {})
             .let { compositeDisposable.add(it) }
 
         bleObservable
@@ -190,14 +229,28 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
             } else if (getBatteryStatus(deviceStatus?.batteryLevel ?: -1) == BatteryLevel.LOW) {
                 showDialogAndFinish(MainBluetoothState.LOW_BATTERY)
+            } else {
+                if(deviceStatus?.runMode ?: -1 == 4) {
+                    viewModel.canTouchTutorial.set(false)
+                    viewModel.isShowTutorial.set(true)
+                } else {
+                    if(!viewModel.canTouchTutorial.get()) {
+                        viewModel.isShowTutorial.set(false)
+                        viewModel.canTouchTutorial.set(true)
+                    }
+                }
             }
             updateViewModel(deviceStatus)
         }
     }
 
+
     private fun showDialogAndFinish(state: MainBluetoothState) {
         if (isCompleteOrErrorOccurred.not()) {
+            isCompleteOrErrorOccurred = true
+            viewModel.isBluetoothEnabled.set(false)
             disconnectTriggerSubject.onNext("")
+            compositeDisposable.clear()
             CommonDialogFragment(
                 text = when (state) {
                     MainBluetoothState.COMPLETE -> resources.getString(R.string.operation_completed)
@@ -210,9 +263,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                     finish()
                     countTimer?.cancel()
                 },
-                _isOnlyConfirmable = true
+                _isOnlyConfirmable = true,
+                _isCancelable = false
             ).show(supportFragmentManager, "")
-            isCompleteOrErrorOccurred = true
         }
     }
 
@@ -292,6 +345,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         const val MIN_20: Int = 20 * 60
         val settingOkTriggerSubject = PublishSubject.create<SettingCache>()
 
+    }
+
+    override fun onBackPressed() {
+        startActivity<ProductSelectActivity>()
+        finish()
+        countTimer?.cancel()
     }
 
 }

@@ -11,7 +11,8 @@ class MainViewModel : BaseViewModel() {
 
     val isKorean: ObservableBoolean = ObservableBoolean(true)
     // Datas
-    val isShowTutorial: ObservableBoolean = ObservableBoolean(false)
+    val canTouchTutorial: ObservableBoolean = ObservableBoolean(false)
+    val isShowTutorial: ObservableBoolean = ObservableBoolean(true)
     val batteryLevel: ObservableField<BatteryLevel> = ObservableField(
         BatteryLevel.FULL
     )
@@ -83,7 +84,7 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun onTutorialClick() {
-        isShowTutorial.set(!isShowTutorial.get())
+        if(canTouchTutorial.get()) isShowTutorial.set(!isShowTutorial.get())
     }
 
     fun onLedClick() {
@@ -91,6 +92,7 @@ class MainViewModel : BaseViewModel() {
 //        ledLevel.set(
 //            if (level < 3) level + 1 else 0
 //        )
+        event.clearAndSet("onLedClick")
     }
 
     fun onMicrocurrentClick() {
@@ -98,6 +100,7 @@ class MainViewModel : BaseViewModel() {
 //        microCurrentLevel.set(
 //            if (level < 5) level + 1 else 0
 //        )
+        event.clearAndSet("onMicroCurrentClick")
     }
 
     fun onGalvanicClick() {

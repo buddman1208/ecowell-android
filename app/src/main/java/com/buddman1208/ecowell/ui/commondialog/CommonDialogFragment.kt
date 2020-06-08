@@ -11,10 +11,16 @@ class CommonDialogFragment(
     private val text: String = "",
     private val _positiveCallback: (() -> Unit)? = null,
     private val _negativeCallback: (() -> Unit)? = null,
-    private val _isOnlyConfirmable: Boolean = false
+    private val _isOnlyConfirmable: Boolean = false,
+    _isCancelable: Boolean = true
 ) : BaseDialogFragment<DialogCommonBinding, CommonDialogViewModel>(
     R.layout.dialog_common
 ) {
+
+
+    init {
+        isCancelable = _isCancelable
+    }
 
     override val viewModel: CommonDialogViewModel =
         CommonDialogViewModel()
@@ -23,6 +29,7 @@ class CommonDialogFragment(
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         applyData()
+
     }
 
     private fun applyData() {

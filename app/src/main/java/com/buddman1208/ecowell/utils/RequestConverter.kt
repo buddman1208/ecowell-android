@@ -11,8 +11,10 @@ object RequestConverter {
         return data.toRequest()
     }
 
-    fun playStopRequest(requestStart: Boolean): String {
-        val data = "X7P:${if (requestStart) 1 else 2}0000"
+    fun playStopRequest(requestStart: Boolean, _minute: Int, _second: Int): String {
+        val minute = String.format("%02d", min(20, _minute))
+        val second = String.format("%02d", min(59, _second))
+        val data = "X7P:${if (requestStart) 1 else 2}${minute}${second}"
         return data.toRequest()
     }
 
