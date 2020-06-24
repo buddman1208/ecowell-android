@@ -228,7 +228,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 showDialogAndFinish(MainBluetoothState.COMPLETE)
 
             } else if (getBatteryStatus(deviceStatus?.batteryLevel ?: -1) == BatteryLevel.LOW) {
-                showDialogAndFinish(MainBluetoothState.LOW_BATTERY)
+                if (deviceStatus?.runMode ?: -1 != 0 && deviceStatus?.runMode ?: -1 != 4) {
+                    showDialogAndFinish(MainBluetoothState.LOW_BATTERY)
+                }
             } else {
                 if(deviceStatus?.runMode ?: -1 == 4) {
                     viewModel.canTouchTutorial.set(false)
