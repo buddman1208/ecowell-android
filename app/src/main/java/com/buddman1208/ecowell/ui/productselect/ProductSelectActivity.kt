@@ -1,6 +1,7 @@
 package com.buddman1208.ecowell.ui.productselect
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.core.os.ConfigurationCompat
 import androidx.databinding.Observable
@@ -16,6 +17,7 @@ import com.buddman1208.ecowell.utils.LocaleWrapper
 import com.polidea.rxandroidble2.scan.ScanResult
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.activity_product_select.*
 import org.jetbrains.anko.intentFor
 import java.util.*
 
@@ -64,7 +66,8 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
 
     private fun changeLanguage(language: String) {
         LocaleWrapper.setLocale(language)
-        recreate()
+        viewModel.isKorean.set(language == "ko")
+        initStrings()
     }
 
     private fun subscribeDevices() {
@@ -102,6 +105,20 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
         viewModel.isKorean.set(locale.language == "ko")
+
+        initStrings()
+    }
+
+    private fun initStrings() {
+        var conf: Configuration = resources.getConfiguration()
+        conf = Configuration(conf)
+        conf.setLocale(Locale(CredentialManager.instance.language))
+        val localizedContext = createConfigurationContext(conf)
+        val localRes = localizedContext.resources
+
+        tvTitle.text = localRes.getString(R.string.ecowell_product_select)
+        btnBluetoothConnection.text = localRes.getString(R.string.bluetooth_connection)
+        tvLanguage.text = localRes.getString(R.string.language)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

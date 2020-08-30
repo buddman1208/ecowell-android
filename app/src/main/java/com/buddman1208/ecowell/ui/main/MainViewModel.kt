@@ -39,6 +39,7 @@ class MainViewModel : BaseViewModel() {
                 batteryImg.set(
                     when (batteryLevel.get()) {
                         BatteryLevel.LOW -> R.drawable.img_battery_low
+                        BatteryLevel.MIDDLE -> R.drawable.img_battery_middle
                         BatteryLevel.FULL -> R.drawable.img_battery_full
                         else -> R.drawable.img_battery_no
                     }
@@ -134,5 +135,5 @@ class MainViewModel : BaseViewModel() {
 }
 
 enum class BatteryLevel {
-    NO, LOW, FULL
+    NO, LOW, MIDDLE, FULL
 }

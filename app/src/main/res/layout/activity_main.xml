@@ -323,6 +323,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="@string/product_name"
+            android:translationY="24dp"
             app:layout_constraintBottom_toBottomOf="@id/toolbar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -335,6 +336,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
             android:text="@string/app_guide"
+            android:translationY="24dp"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivGuide" />
@@ -346,6 +348,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
             android:text="@string/bluetooth_connection"
+            android:translationY="24dp"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -358,6 +361,7 @@
             android:layout_height="0dp"
             android:layout_marginRight="16dp"
             android:text="@string/battery"
+            android:translationY="24dp"
             app:layout_constraintBottom_toBottomOf="@id/ivGuide"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivGuide" />
@@ -376,7 +380,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                android:text="@string/care_info" />
+                android:text="@string/care_info"
+                android:translationY="-16dp" />
 
             <TextView
                 android:id="@+id/ttMode"
@@ -385,7 +390,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:paddingTop="16dp"
-                android:text="@string/mode_info" />
+                android:text="@string/mode_info"
+                android:translationY="24dp" />
         </LinearLayout>
 
         <TextView
@@ -395,6 +401,7 @@
             android:layout_height="0dp"
             android:layout_marginRight="16dp"
             android:text="@string/site_link"
+            android:translationY="-16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -407,6 +414,7 @@
             android:layout_height="0dp"
             android:layout_marginRight="16dp"
             android:text="@string/device_setting"
+            android:translationY="-16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivHomepage" />

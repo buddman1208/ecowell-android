@@ -321,9 +321,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getBatteryStatus(batteryLevel: Int): BatteryLevel {
-        return when {
-            batteryLevel > 7 -> BatteryLevel.FULL
-            else -> BatteryLevel.LOW
+        return when(batteryLevel) {
+            0 -> BatteryLevel.NO
+            1 -> BatteryLevel.LOW
+            2 -> BatteryLevel.MIDDLE
+            else -> BatteryLevel.FULL
         }
     }
 

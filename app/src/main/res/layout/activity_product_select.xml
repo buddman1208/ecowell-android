@@ -16,6 +16,7 @@
         tools:context=".ui.productselect.ProductSelectActivity">
 
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorCommonBlack"
@@ -77,6 +78,7 @@
             app:layout_constraintTop_toBottomOf="@id/btnLuWellSelect">
 
             <TextView
+                android:id="@+id/btnBluetoothConnection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -93,6 +95,7 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tvLanguage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
