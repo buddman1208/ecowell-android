@@ -93,11 +93,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                                         timeLeft % 60
                                     )
                                 )
-                                Handler().postDelayed({
-                                    write(
-                                        RequestConverter.setParameterSaveEnabled(true)
-                                    )
-                                }, 100)
+//                                Handler().postDelayed({
+//                                    write(
+//                                        RequestConverter.setParameterSaveEnabled(true)
+//                                    )
+//                                }, 100)
                             }
                         }
                         "onMicroCurrentClick" -> {
@@ -111,11 +111,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                                         timeLeft % 60
                                     )
                                 )
-                                Handler().postDelayed({
-                                    write(
-                                        RequestConverter.setParameterSaveEnabled(true)
-                                    )
-                                }, 100)
+//                                Handler().postDelayed({
+//                                    write(
+//                                        RequestConverter.setParameterSaveEnabled(true)
+//                                    )
+//                                }, 100)
                             }
                         }
                         else -> {
@@ -228,7 +228,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 showDialogAndFinish(MainBluetoothState.COMPLETE)
 
             } else if (getBatteryStatus(deviceStatus?.batteryLevel ?: -1) == BatteryLevel.LOW) {
-                if (deviceStatus?.runMode ?: -1 != 0 && deviceStatus?.runMode ?: -1 != 4) {
+                val runMode = deviceStatus?.runMode ?: -1
+                if (runMode == 0 || runMode == 4) {
                     showDialogAndFinish(MainBluetoothState.LOW_BATTERY)
                 }
             } else {
