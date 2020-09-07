@@ -52,18 +52,24 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private var timeLeft: Int = 0
     private var countTimer: Timer? = null
-    private fun countDownTask(): TimerTask = object : TimerTask() {
-        override fun run() {
-            timeLeft -= 1
+    private var handler: Handler? = null
 
-            updateProgress()
-            if (timeLeft == 10 * 60 + 30 || timeLeft == 30) {
-                // 10:30 초 남았을때, 30초 남았을 때
-                write(
-                    RequestConverter.sendTimeRequest(timeLeft / 60, timeLeft % 60)
-                )
-            }
+    var time = System.currentTimeMillis()
+
+    private fun timerRunnable(): Runnable = Runnable {
+        timeLeft -= 1
+        Log.e("asdf", "${System.currentTimeMillis() - time}")
+        time = System.currentTimeMillis()
+
+        updateProgress()
+        if (timeLeft == 10 * 60 + 30 || timeLeft == 30) {
+            // 10:30 초 남았을때, 30초 남았을 때
+            write(
+                RequestConverter.sendTimeRequest(timeLeft / 60, timeLeft % 60)
+            )
         }
+
+        handler?.postDelayed(timerRunnable(), 1000L)
     }
 
     private val settingInstance: SettingDialogFragment by lazy {
@@ -139,7 +145,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
         binding.apply {
             ivRun.setOnClickListener {
                 write(
-                    RequestConverter.playStopRequest(!viewModel.isRunning.get(), timeLeft / 60, timeLeft % 60)
+                    RequestConverter.playStopRequest(
+                        !viewModel.isRunning.get(),
+                        timeLeft / 60,
+                        timeLeft % 60
+                    )
                 )
             }
         }
@@ -227,17 +237,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
                 // disconnect trigger
                 showDialogAndFinish(MainBluetoothState.COMPLETE)
 
-            } else if (getBatteryStatus(deviceStatus?.batteryLevel ?: -1) == BatteryLevel.LOW) {
-                val runMode = deviceStatus?.runMode ?: -1
-                if (runMode == 0 || runMode == 4) {
-                    showDialogAndFinish(MainBluetoothState.LOW_BATTERY)
-                }
+            } else if (getBatteryStatus(deviceStatus?.batteryLevel ?: -1) == BatteryLevel.NO) {
+                showDialogAndFinish(MainBluetoothState.LOW_BATTERY)
             } else {
-                if(deviceStatus?.runMode ?: -1 == 4) {
+                if (deviceStatus?.runMode ?: -1 == 4) {
                     viewModel.canTouchTutorial.set(false)
                     viewModel.isShowTutorial.set(true)
                 } else {
-                    if(!viewModel.canTouchTutorial.get()) {
+                    if (!viewModel.canTouchTutorial.get()) {
                         viewModel.isShowTutorial.set(false)
                         viewModel.canTouchTutorial.set(true)
                     }
@@ -299,14 +306,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun startTimer() {
-        countTimer?.cancel()
-        countTimer = Timer()
-        countTimer?.schedule(countDownTask(), 1000, 1000)
+        handler?.postDelayed(timerRunnable(), 1000)
         updateProgress()
     }
 
     private fun stopTimer() {
-        countTimer?.cancel()
+        handler?.removeCallbacksAndMessages(null)
         updateProgress()
     }
 
@@ -322,7 +327,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun getBatteryStatus(batteryLevel: Int): BatteryLevel {
-        return when(batteryLevel) {
+        return when (batteryLevel) {
             0 -> BatteryLevel.NO
             1 -> BatteryLevel.LOW
             2 -> BatteryLevel.MIDDLE

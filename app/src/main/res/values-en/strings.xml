@@ -14,7 +14,7 @@
     <string name="max_level" formatted="false">LEVEL MAX %d</string>
     <string name="ecowell_product_select">ecowell Product Select</string>
     <string name="bluetooth_connection">Bluetooth Connection</string>
-    <string name="app_guide">Application Guide</string>
+    <string name="app_guide">Application\nGuide</string>
     <string name="product_name">Product Name</string>
     <string name="battery_text">Battery</string>
     <string name="battery">Battery Status</string>
