@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.buddman1208.ecowell.ui.main.MainViewModel" />
+            type="com.buddman1208.ecowell.ui.luwell.LuwellViewModel" />
 
         <import type="android.view.View" />
     </data>

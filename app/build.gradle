@@ -65,6 +65,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
+    compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.3'
+
+
 
 
 }

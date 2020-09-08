@@ -1,11 +1,11 @@
-package com.buddman1208.ecowell.ui.main
+package com.buddman1208.ecowell.ui.luwell
 
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.core.os.ConfigurationCompat
 import com.buddman1208.ecowell.R
-import com.buddman1208.ecowell.databinding.ActivityMainBinding
+import com.buddman1208.ecowell.databinding.ActivityLuwellBinding
 import com.buddman1208.ecowell.ui.base.BaseActivity
 import com.buddman1208.ecowell.ui.commondialog.CommonDialogFragment
 import com.buddman1208.ecowell.ui.productselect.ProductSelectActivity
@@ -25,11 +25,11 @@ import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.util.*
 
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
-    R.layout.activity_main
+class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
+    R.layout.activity_luwell
 ) {
-    public override val viewModel: MainViewModel =
-        MainViewModel()
+    public override val viewModel: LuwellViewModel =
+        LuwellViewModel()
 
     val macaddress: String by lazy {
         intent.getStringExtra("macAddress")
@@ -52,7 +52,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private var timeLeft: Int = 0
     private var countTimer: Timer? = null
-    private var handler: Handler? = null
+    private var handler: Handler? = Handler()
 
     var time = System.currentTimeMillis()
 

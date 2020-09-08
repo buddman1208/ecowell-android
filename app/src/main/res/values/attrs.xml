@@ -5,5 +5,9 @@
         <attr name="strokeColor" format="color|reference" />
         <attr name="progressColor" format="color|reference" />
         <attr name="progressPercent" format="integer" />
+        <attr name="type" format="enum">
+            <enum name="ionstone" value="0" />
+            <enum name="luwell" value="1" />
+        </attr>
     </declare-styleable>
 </resources>

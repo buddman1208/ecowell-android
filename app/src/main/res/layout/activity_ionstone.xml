@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.buddman1208.ecowell.ui.ionstone.IonStoneViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@color/colorCommonBlack"
+            android:gravity="center"
+            android:text="@string/ionstone_toolbar_title"
+            android:textColor="#FFF"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Background Image -->
+
+        <!-- Top Icons -->
+
+        <ImageView
+            android:id="@+id/ivGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="@{() -> vm.onTutorialClick()}"
+            android:padding="16dp"
+            android:src="@drawable/ic_guide_selector"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+        <TextView
+            android:id="@+id/tvBluetooth"
+            style="@style/InfoTextWithIcons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bluetooth"
+            app:layout_constraintBottom_toBottomOf="@id/ivGuide"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivGuide"
+            app:rightImg="@{vm.bluetoothImg}" />
+
+        <TextView
+            android:id="@+id/tvBattery"
+            style="@style/InfoTextWithIcons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:drawablePadding="@dimen/drawable_padding"
+            android:text="@string/battery_text"
+            app:iconOnRight="@{vm.batteryImg}"
+            app:layout_constraintBottom_toBottomOf="@id/ivGuide"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivGuide" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/ivHomepage"
+            app:layout_constraintTop_toBottomOf="@id/ivGuide">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/glLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.15" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/glRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.85" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/glTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.15" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/glBottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.85" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/textbaseline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.75" />
+
+                <ImageView
+                    android:id="@+id/ivRun"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@{vm.isModeSelected() ? (vm.isRunning() ? @drawable/img_ionstone_timer_pause : @drawable/img_ionstone_timer_active) : @drawable/img_ionstone_timer_inactive}"
+                    app:layout_constraintBottom_toBottomOf="@id/glBottom"
+                    app:layout_constraintDimensionRatio="h, 1"
+                    app:layout_constraintLeft_toLeftOf="@id/glLeft"
+                    app:layout_constraintRight_toRightOf="@id/glRight"
+                    app:layout_constraintTop_toTopOf="@id/glTop" />
+
+                <com.buddman1208.ecowell.view.RoundProgressView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@id/glBottom"
+                    app:layout_constraintDimensionRatio="h, 1"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="@id/glLeft"
+                    app:layout_constraintRight_toRightOf="@id/glRight"
+                    app:layout_constraintTop_toTopOf="@id/glTop"
+                    app:progress="@{vm.progress}"
+                    app:progressColor="@color/colorEcoWellBright"
+                    app:strokeWidth="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{vm.currentTime}"
+                    android:textColor="#000"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/textbaseline"
+                    app:layout_constraintLeft_toLeftOf="@id/glLeft"
+                    app:layout_constraintRight_toRightOf="@id/glRight"
+                    tools:text="12:50" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/img_ionstone_bg" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tvMode"
+                    style="@style/MajorText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="MODE"
+                    app:layout_constraintBottom_toTopOf="@id/optionContainer"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <LinearLayout
+                    android:id="@+id/optionContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="26dp"
+                    android:paddingRight="26dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvMode">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+
+                        <ImageView
+                            android:id="@+id/ivMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:padding="4dp"
+                            android:src="@{vm.isModeSelected() ? @drawable/bg_mode_active : @drawable/bg_mode_inactive}"
+                            app:layout_constraintBottom_toTopOf="@id/tvLed"
+                            app:layout_constraintDimensionRatio="w, 1"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            style="@style/CommonText"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:text="@{vm.modeString}"
+                            android:textColor="@{vm.isModeSelected() ? @color/colorWhite : @color/colorGray}"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@id/ivMode"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/ivMode" />
+
+                        <TextView
+                            android:id="@+id/tvLed"
+                            style="@style/CommonText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mode"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ivMode" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+
+                        <ImageView
+                            android:id="@+id/ivWater"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:padding="4dp"
+                            android:src="@{vm.isModeSelected() ? @drawable/bg_mode_active : @drawable/bg_mode_inactive}"
+                            app:layout_constraintBottom_toTopOf="@id/tvMicro"
+                            app:layout_constraintDimensionRatio="w, 1"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            style="@style/CommonText"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:text="@{vm.waterString}"
+                            android:textColor="@{vm.isModeSelected() ? @color/colorWhite : @color/colorGray}"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@id/ivWater"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/ivWater" />
+
+                        <TextView
+                            android:id="@+id/tvMicro"
+                            style="@style/CommonText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/water"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ivWater" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+
+                        <ImageView
+                            android:id="@+id/ivAdditives"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:padding="4dp"
+                            android:src="@{vm.isModeSelected() ? @drawable/bg_mode_active : @drawable/bg_mode_inactive}"
+                            app:layout_constraintBottom_toTopOf="@id/tvGalvanic"
+                            app:layout_constraintDimensionRatio="w, 1"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            style="@style/CommonText"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:text="@{vm.additiveString}"
+                            android:textColor="@{vm.isModeSelected() ? @color/colorWhite : @color/colorGray}"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="@id/ivAdditives"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/ivAdditives" />
+
+
+                        <TextView
+                            android:id="@+id/tvGalvanic"
+                            style="@style/CommonText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Additives"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ivAdditives" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivHomepage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> vm.onHomepageClick()}"
+            android:padding="12dp"
+            android:src="@drawable/ic_ionstone_homepage_selector"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <ImageView
+            android:id="@+id/ttOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:onClick="@{() -> vm.onTutorialClick()}" />
+
+        <TextView
+            android:id="@+id/ttToolbar"
+            style="@style/TutorialText"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@string/product_name"
+            android:translationY="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/toolbar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ttTutorial"
+            style="@style/TutorialText"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
+            android:text="@string/app_guide"
+            android:translationY="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/ivGuide"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivGuide" />
+
+        <TextView
+            android:id="@+id/ttBluetooth"
+            style="@style/TutorialText"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/bluetooth_connection"
+            android:translationY="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/ivGuide"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivGuide" />
+
+        <TextView
+            android:id="@+id/ttBattery"
+            style="@style/TutorialText"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/battery"
+            android:translationY="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/ivGuide"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivGuide" />
+
+        <LinearLayout
+            android:id="@+id/ttLL"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/ivHomepage"
+            app:layout_constraintTop_toBottomOf="@id/ttBattery">
+
+            <TextView
+                android:id="@+id/ttPlay"
+                style="@style/TutorialText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:text="@string/ionstone_care_info"
+                android:translationY="-16dp" />
+
+            <TextView
+                android:id="@+id/ttMode"
+                style="@style/TutorialText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingTop="16dp"
+                android:text="@string/ionstone_mode_info"
+                android:translationY="24dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ttEcowell"
+            style="@style/TutorialText"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/go_to_ecowell_site"
+            android:translationY="-16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivHomepage" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{vm.isShowTutorial() ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="ttToolbar,ttTutorial,ttBluetooth,ttBattery,ttLL,ttEcowell,ttOverlay" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

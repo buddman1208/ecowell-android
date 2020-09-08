@@ -69,6 +69,7 @@ class RoundProgressView(context: Context, attrs: AttributeSet) : View(context, a
                 progress = getInteger(R.styleable.RoundProgressView_progressPercent, 50)
                 progressColor = getColor(R.styleable.RoundProgressView_progressColor, progressColor)
                 strokeColor = getColor(R.styleable.RoundProgressView_strokeColor, strokeColor)
+                strokeColor = getColor(R.styleable.RoundProgressView_strokeColor, strokeColor)
             } finally {
                 recycle()
             }

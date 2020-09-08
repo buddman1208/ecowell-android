@@ -37,5 +37,28 @@
     <string name="no_device_connected">연결된 기기가 없습니다.</string>
     <string name="request_permission">앱 사용을 위해서 권한을 허용해 주세요</string>
     <string name="request_permission_when_denied">권한을 허용하셔야 앱 사용이 가능합니다.</string>
+    <string name="ionstone_toolbar_title">I:ON STONE</string>
+    <string name="mode">MODE</string>
+    <string name="water">Water</string>
+    <string name="Additives">Additives</string>
+    <string name="water_select">Water\nSelect</string>
+    <string name="mode_select">Mode\nSelect</string>
+    <string name="next">NEXT</string>
+    <string name="ionstone_care_info">동작 진행 상황을 알려줍니다.\n터치로 \'일시정지\' 할 수 있습니다.\n\n시간 카운트가 표시됩니다.</string>
+    <string name="ionstone_mode_info">진행 중인 모드를 보여줍니다.\n터치하면 변경할 수 있습니다.</string>
+    <string name="go_to_ecowell_site">에코웰 사이트 이동</string>
+
+
+    <string-array name="ionstone_mode">
+        <item>위생, 미용 용품</item>
+        <item>홈케어</item>
+        <item>전자 제품</item>
+    </string-array>
+
+    <string-array name="ionstone_water">
+        <item>2L</item>
+        <item>3L</item>
+        <item>4L</item>
+    </string-array>
 
 </resources>

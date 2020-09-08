@@ -8,7 +8,7 @@ import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.DialogSettingBinding
 import com.buddman1208.ecowell.ui.base.BaseDialogFragment
 import com.buddman1208.ecowell.ui.commondialog.CommonDialogFragment
-import com.buddman1208.ecowell.ui.main.MainActivity
+import com.buddman1208.ecowell.ui.luwell.LuwellActivity
 import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.SettingCache
 
@@ -38,7 +38,7 @@ class SettingDialogFragment :
                                 CredentialManager.instance.setting2 = save
                             }
 
-                            MainActivity.settingOkTriggerSubject.onNext(
+                            LuwellActivity.settingOkTriggerSubject.onNext(
                                 SettingCache(
                                     ledLevel = viewModel.ledLevel.get(),
                                     microCurrent = viewModel.microCurrentLevel.get()

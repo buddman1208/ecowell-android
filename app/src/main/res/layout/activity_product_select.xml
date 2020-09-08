@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:onClick="@{vm::onTypeSelected}"
-            android:src="@drawable/btn_select_ionstone_disable"
+            android:src="@{vm.ionStoneAvailable ? @drawable/btn_select_ionstone_enable : @drawable/btn_select_ionstone_disable}"
             app:layout_constraintLeft_toRightOf="@id/btnLuWellSelect"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/btnLuWellSelect" />

@@ -25,7 +25,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.luwell.LuwellActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".ui.ionstone.IonStoneActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 

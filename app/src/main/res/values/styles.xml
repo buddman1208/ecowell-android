@@ -82,6 +82,11 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="TextButtonBlue" parent="TextButtonCommon">
+        <item name="android:background">@drawable/bg_round_2dp_ecowellbright</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="TextButtonNegative" parent="TextButtonCommon">
         <item name="android:background">@drawable/bg_round_2dp_gray</item>
         <item name="android:textColor">@color/colorCommonBlack</item>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.buddman1208.ecowell.ui.ionstonesetting.IonStoneDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/MajorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="24dp"
+            android:text="@string/setting"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="@{() -> vm.onDismissClicked()}"
+            android:padding="4dp"
+            android:src="@drawable/ic_close_selector"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/llLed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/llMicrocurrent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_select_mode" />
+
+            <com.aigestudio.wheelpicker.WheelPicker
+                android:id="@+id/wheelMode"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:wheel_data="@array/ionstone_mode"
+                app:wheel_item_text_color="@color/colorGray"
+                app:wheel_item_text_size="20sp"
+                app:wheel_selected_item_text_color="@color/colorHardBlack"
+                app:wheel_visible_item_count="3" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/colorGray"
+            app:layout_constraintBottom_toBottomOf="@id/llLed"
+            app:layout_constraintLeft_toRightOf="@id/llLed"
+            app:layout_constraintTop_toTopOf="@id/llLed" />
+
+        <LinearLayout
+            android:id="@+id/llMicrocurrent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/llLed"
+            app:layout_constraintLeft_toRightOf="@id/llLed"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/llLed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_select_water" />
+
+            <com.aigestudio.wheelpicker.WheelPicker
+                android:id="@+id/wheelWater"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                app:wheel_data="@array/ionstone_water"
+                app:wheel_item_text_color="@color/colorGray"
+                app:wheel_item_text_size="20sp"
+                app:wheel_selected_item_text_color="@color/colorHardBlack"
+                app:wheel_visible_item_count="3" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvNext"
+            style="@style/TextButtonBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:minWidth="80dp"
+            android:text="@string/next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llLed" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvSave"-->
+        <!--            style="@style/TextButtonNegative"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:layout_marginBottom="16dp"-->
+        <!--            android:minWidth="80dp"-->
+        <!--            android:onClick="@{() -> vm.onOkClicked()}"-->
+        <!--            android:text="@string/ok"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintRight_toRightOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/llLed" />-->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

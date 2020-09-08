@@ -10,6 +10,7 @@ import org.jetbrains.anko.toast
 class ProductSelectViewModel : BaseViewModel() {
 
     val luWellAvailable: ObservableBoolean = ObservableBoolean(false)
+    val ionStoneAvailable: ObservableBoolean = ObservableBoolean(true)
     val isKorean: ObservableBoolean = ObservableBoolean(true)
 
     fun onKoreanSelected() {
@@ -23,8 +24,7 @@ class ProductSelectViewModel : BaseViewModel() {
     fun onTypeSelected(view: View) {
         // TODO ionstone not allowed for now
         when (view.id) {
-//            R.id.btnIonSelect -> event.clearAndSet("startLuWellActivity")
-            R.id.btnIonSelect -> view.context.toast(view.context.resources.getString(R.string.no_device_connected))
+            R.id.btnIonSelect -> event.clearAndSet("startIonStoneActivity")
             R.id.btnLuWellSelect -> if (luWellAvailable.get()) {
                 event.clearAndSet("startLuWellActivity")
             } else view.context.toast(view.context.resources.getString(R.string.no_device_connected))

@@ -1,4 +1,4 @@
-package com.buddman1208.ecowell.ui.main
+package com.buddman1208.ecowell.ui.luwell
 
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -7,9 +7,10 @@ import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseViewModel
 import com.buddman1208.ecowell.utils.clearAndSet
 
-class MainViewModel : BaseViewModel() {
+class LuwellViewModel : BaseViewModel() {
 
     val isKorean: ObservableBoolean = ObservableBoolean(true)
+
     // Datas
     val canTouchTutorial: ObservableBoolean = ObservableBoolean(false)
     val isShowTutorial: ObservableBoolean = ObservableBoolean(true)
