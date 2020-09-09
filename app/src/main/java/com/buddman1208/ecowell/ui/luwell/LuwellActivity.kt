@@ -293,7 +293,7 @@ class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
                 if (runMode == 2) 1 else 0
             )
             viewModel.isRunning.set(isRunning)
-            if (countTimer == null) updateTimer(
+            if (deviceStatus.runMode == 0 || deviceStatus.runMode == 4) updateTimer(
                 if (minute != -1 && second != -1) minute * 60 + second else MIN_20
             )
             if (isRunning) startTimer() else stopTimer()

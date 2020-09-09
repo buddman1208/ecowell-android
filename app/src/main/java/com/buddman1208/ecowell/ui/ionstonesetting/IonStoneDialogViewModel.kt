@@ -4,40 +4,14 @@ import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseDialogViewModel
-import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.clearAndSet
 
 class IonStoneDialogViewModel : BaseDialogViewModel() {
 
     val isKorean: ObservableBoolean = ObservableBoolean(true)
-
-    // level values
-    val ledLevel: ObservableInt = ObservableInt(CredentialManager.instance.setting1.ledLevel)
-    val microCurrentLevel: ObservableInt =
-        ObservableInt(CredentialManager.instance.setting1.microCurrent)
-    val galvanicLevel: ObservableInt = ObservableInt(1)
-
-    // setting type
-    val settingType: ObservableInt = ObservableInt(1)
-    fun selectType(value: Int) {
-        settingType.set(value)
-        ledLevel.set(
-            (if (value == 1) CredentialManager.instance.setting1 else CredentialManager.instance.setting2).ledLevel
-        )
-        microCurrentLevel.set(
-            (if (value == 1) CredentialManager.instance.setting1 else CredentialManager.instance.setting2).microCurrent
-        )
-    }
-
-    // save action
-    val saveAction: ObservableField<String> = ObservableField("")
-    fun onNextClicked() {
-        saveAction.clearAndSet(settingType.get().toString())
-    }
+    val isSecondPage: ObservableBoolean = ObservableBoolean(false)
 
     fun onDismissClicked() = dismissEvent.clearAndSet("dismiss")
 

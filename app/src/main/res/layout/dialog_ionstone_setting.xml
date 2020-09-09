@@ -7,12 +7,15 @@
         <variable
             name="vm"
             type="com.buddman1208.ecowell.ui.ionstonesetting.IonStoneDialogViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
+
 
         <TextView
             android:id="@+id/tvTitle"
@@ -21,7 +24,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
             android:paddingBottom="24dp"
-            android:text="@string/setting"
+            android:text="@{vm.isSecondPage() ? @string/how_to_use : @string/setting}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -37,14 +40,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/llLed"
+            android:id="@+id/llMode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/llMicrocurrent"
+            app:layout_constraintRight_toLeftOf="@id/llWater"
             app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
             <ImageView
@@ -67,24 +70,25 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/divider"
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:background="@color/colorGray"
-            app:layout_constraintBottom_toBottomOf="@id/llLed"
-            app:layout_constraintLeft_toRightOf="@id/llLed"
-            app:layout_constraintTop_toTopOf="@id/llLed" />
+            app:layout_constraintBottom_toBottomOf="@id/llMode"
+            app:layout_constraintLeft_toRightOf="@id/llMode"
+            app:layout_constraintTop_toTopOf="@id/llMode" />
 
         <LinearLayout
-            android:id="@+id/llMicrocurrent"
+            android:id="@+id/llWater"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@id/llLed"
-            app:layout_constraintLeft_toRightOf="@id/llLed"
+            app:layout_constraintBottom_toBottomOf="@id/llMode"
+            app:layout_constraintLeft_toRightOf="@id/llMode"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/llLed">
+            app:layout_constraintTop_toTopOf="@id/llMode">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -105,6 +109,46 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/ivInfoImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_home"
+            app:layout_constraintBottom_toTopOf="@id/ivInfoTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/ivInfoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="홈케어 모드"
+            android:textColor="@color/colorEcoWellBright"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/ivInfoContent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivInfoImage" />
+
+        <TextView
+            android:id="@+id/ivInfoContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="물 약 3L에서는\n소금을 1g(전용스푼 2번) 넣어주세요.\n총 7분의 시간이 걸립니다."
+            android:textColor="@color/colorCommonBlack"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tvNext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivInfoTitle" />
+
 
         <TextView
             android:id="@+id/tvNext"
@@ -114,26 +158,23 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:minWidth="80dp"
-            android:text="@string/next"
+            android:text="@{vm.isSecondPage() ? @string/start : @string/next}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llLed" />
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/tvSave"-->
-        <!--            style="@style/TextButtonNegative"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="16dp"-->
-        <!--            android:layout_marginBottom="16dp"-->
-        <!--            android:minWidth="80dp"-->
-        <!--            android:onClick="@{() -> vm.onOkClicked()}"-->
-        <!--            android:text="@string/ok"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintRight_toRightOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/llLed" />-->
+            app:layout_constraintTop_toBottomOf="@id/llMode" />
 
 
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{vm.isSecondPage() ? View.INVISIBLE : View.VISIBLE}"
+            app:constraint_referenced_ids="llMode, llWater, divider" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{vm.isSecondPage() ? View.VISIBLE : View.INVISIBLE}"
+            app:constraint_referenced_ids="ivInfoContent, ivInfoImage, ivInfoTitle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

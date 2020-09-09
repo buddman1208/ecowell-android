@@ -22,18 +22,21 @@ class IonStoneSettingFragment(
         viewModel.isKorean.set(ConfigurationCompat.getLocales(resources.configuration)[0].language == "ko")
 
         binding.tvNext.setOnClickListener {
-            val mode = binding.wheelMode.currentItemPosition
-            val water = binding.wheelWater.currentItemPosition
+            if (!viewModel.isSecondPage.get()) {
+                viewModel.isSecondPage.set(true)
+            } else {
+                val mode = binding.wheelMode.currentItemPosition
+                val water = binding.wheelWater.currentItemPosition
 
-            listener.onComplete(
-                IonStoneSettingResponse(
-                    mode = mode,
-                    water = water
+                listener.onComplete(
+                    IonStoneSettingResponse(
+                        mode = mode,
+                        water = water
+                    )
                 )
-            )
-            dismiss()
+                dismiss()
+            }
         }
-
     }
 
     override fun onDestroy() {
