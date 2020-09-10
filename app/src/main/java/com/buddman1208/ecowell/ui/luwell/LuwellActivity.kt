@@ -300,7 +300,9 @@ class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
                 updateTimer(
                     if (minute != -1 && second != -1) minute * 60 + second else MIN_20
                 )
-                isTimeReceived = true
+                if (deviceStatus.runMode in (1..3)) {
+                    isTimeReceived = true
+                }
             }
             if (isRunning) startTimer() else stopTimer()
         }
