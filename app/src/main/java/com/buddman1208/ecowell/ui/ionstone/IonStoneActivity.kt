@@ -16,7 +16,6 @@ import com.buddman1208.ecowell.utils.SettingCache
 import com.polidea.rxandroidble2.exceptions.BleDisconnectedException
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.startActivity
-import java.util.*
 
 class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel>(
     R.layout.activity_ionstone
@@ -25,7 +24,6 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         IonStoneViewModel()
 
     private var timeLeft: Int = 0
-    private var countTimer: Timer? = null
     private var handler: Handler? = Handler()
 
     var time = System.currentTimeMillis()
@@ -130,6 +128,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     }
 
     private fun startTimer() {
+        handler?.removeCallbacksAndMessages(null)
         handler?.postDelayed(timerRunnable(), 1000)
         updateProgress()
     }
@@ -184,7 +183,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     override fun onBackPressed() {
         startActivity<ProductSelectActivity>()
         finish()
-        countTimer?.cancel()
+        handler?.removeCallbacksAndMessages(null)
     }
 
 }

@@ -48,28 +48,29 @@ class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
         intent.getSerializableExtra("notify") as UUID
     }
 
+    var isTimeReceived: Boolean = false
+
     private var isCompleteOrErrorOccurred: Boolean = false
 
     private var timeLeft: Int = 0
-    private var countTimer: Timer? = null
     private var handler: Handler? = Handler()
 
     var time = System.currentTimeMillis()
 
     private fun timerRunnable(): Runnable = Runnable {
+        handler?.postDelayed(timerRunnable(), 1000L)
+        Log.e("asdfasdf", "timerRunnable $timeLeft")
         timeLeft -= 1
-        Log.e("asdf", "${System.currentTimeMillis() - time}")
+        Log.e("asdfasdf", "${System.currentTimeMillis() - time}")
         time = System.currentTimeMillis()
 
-        updateProgress()
         if (timeLeft == 10 * 60 + 30 || timeLeft == 30) {
             // 10:30 초 남았을때, 30초 남았을 때
             write(
                 RequestConverter.sendTimeRequest(timeLeft / 60, timeLeft % 60)
             )
         }
-
-        handler?.postDelayed(timerRunnable(), 1000L)
+        updateProgress()
     }
 
     private val settingInstance: SettingDialogFragment by lazy {
@@ -271,7 +272,7 @@ class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
                 _positiveCallback = {
                     startActivity<ProductSelectActivity>()
                     finish()
-                    countTimer?.cancel()
+                    handler?.removeCallbacksAndMessages(null)
                 },
                 _isOnlyConfirmable = true,
                 _isCancelable = false
@@ -280,6 +281,7 @@ class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
     }
 
     private fun updateViewModel(deviceStatus: EcoWellStatus?) {
+        Log.e("asdf", "updateViewModel")
         deviceStatus?.run {
             viewModel.batteryLevel.set(getBatteryStatus(batteryLevel))
             viewModel.ledLevel.set(
@@ -293,26 +295,38 @@ class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
                 if (runMode == 2) 1 else 0
             )
             viewModel.isRunning.set(isRunning)
-            if (deviceStatus.runMode == 0 || deviceStatus.runMode == 4) updateTimer(
-                if (minute != -1 && second != -1) minute * 60 + second else MIN_20
-            )
+            if (!isTimeReceived || deviceStatus.runMode == 0 || deviceStatus.runMode == 4) {
+                Log.e("asdf", "updating time $isTimeReceived ${deviceStatus.runMode}")
+                updateTimer(
+                    if (minute != -1 && second != -1) minute * 60 + second else MIN_20
+                )
+                isTimeReceived = true
+            }
             if (isRunning) startTimer() else stopTimer()
         }
     }
 
     private fun updateTimer(leftSeconds: Int = MIN_20) {
+        Log.e("asdfasdf", "updateTimer $leftSeconds")
         timeLeft = leftSeconds
         updateProgress()
     }
 
+    var isTimerRunning: Boolean = false
     private fun startTimer() {
-        handler?.postDelayed(timerRunnable(), 1000)
-        updateProgress()
+        if (isTimerRunning.not()) {
+            handler?.postDelayed(timerRunnable(), 1000L)
+            updateProgress()
+            isTimerRunning = true
+        }
     }
 
     private fun stopTimer() {
-        handler?.removeCallbacksAndMessages(null)
-        updateProgress()
+        if (isTimerRunning) {
+            handler?.removeCallbacksAndMessages(null)
+            updateProgress()
+            isTimerRunning = false
+        }
     }
 
     private fun updateProgress() {
@@ -358,9 +372,9 @@ class LuwellActivity : BaseActivity<ActivityLuwellBinding, LuwellViewModel>(
     }
 
     override fun onBackPressed() {
+        handler?.removeCallbacksAndMessages(null)
         startActivity<ProductSelectActivity>()
         finish()
-        countTimer?.cancel()
     }
 
 }
