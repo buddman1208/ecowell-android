@@ -12,16 +12,42 @@ import com.buddman1208.ecowell.ui.ionstonesetting.IonStoneSettingFragment
 import com.buddman1208.ecowell.ui.ionstonesetting.IonStoneSettingResponse
 import com.buddman1208.ecowell.ui.productselect.ProductSelectActivity
 import com.buddman1208.ecowell.ui.setting.SettingDialogFragment
+import com.buddman1208.ecowell.utils.BLEController
+import com.buddman1208.ecowell.utils.RequestConverter
 import com.buddman1208.ecowell.utils.SettingCache
+import com.jakewharton.rx.ReplayingShare
+import com.polidea.rxandroidble2.RxBleConnection
+import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.exceptions.BleDisconnectedException
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
+import java.util.*
 
 class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel>(
     R.layout.activity_ionstone
 ) {
     public override val viewModel: IonStoneViewModel =
         IonStoneViewModel()
+
+    val macaddress: String by lazy {
+        intent.getStringExtra("macAddress") ?: ""
+    }
+
+    private lateinit var bleDevice: RxBleDevice
+    private val disconnectTriggerSubject = PublishSubject.create<String>()
+
+    private lateinit var bleObservable: Observable<RxBleConnection>
+
+    val writeUUID: UUID by lazy {
+        intent.getSerializableExtra("write") as UUID
+    }
+
+    val notifyUUID: UUID by lazy {
+        intent.getSerializableExtra("notify") as UUID
+    }
 
     private var timeLeft: Int = 0
     private var handler: Handler? = Handler()
@@ -66,6 +92,10 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         binding.vm = viewModel
         viewModel.isKorean.set(ConfigurationCompat.getLocales(resources.configuration)[0].language == "ko")
 
+        validateConnection()
+        disconnectTriggerSubject
+            .subscribe { compositeDisposable.clear() }
+            .let { compositeDisposable.add(it) }
 
         binding.apply {
             ivRun.setOnClickListener {
@@ -89,6 +119,65 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 openDialog()
             }
         }
+    }
+
+    private fun validateConnection() {
+        bleDevice = BLEController.connectStream(macaddress)
+        bleObservable = prepareConnectionObservable()
+
+
+        bleObservable
+            .flatMapSingle { it.discoverServices() }
+            .flatMapSingle { it.getCharacteristic(notifyUUID) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .takeUntil(disconnectTriggerSubject)
+            .doOnSubscribe { toast(resources.getString(R.string.connecting)) }
+            .subscribe({
+                toast(resources.getString(R.string.connected))
+            }, {})
+            .let { compositeDisposable.add(it) }
+
+        bleObservable
+            .flatMap { it.setupNotification(notifyUUID) }
+            .doOnNext {
+                runOnUiThread {
+                    toast(resources.getString(R.string.connected_alert))
+
+                    viewModel.isBluetoothEnabled.set(true)
+                    write(
+                        RequestConverter.getAllScanRequest()
+                    )
+                }
+            }
+            .flatMap { it }
+            .observeOn(AndroidSchedulers.mainThread())
+            .takeUntil(disconnectTriggerSubject)
+            .subscribe(::onNotificationReceived, ::onConnectionError)
+            .let { compositeDisposable.add(it) }
+
+    }
+
+    private fun write(writeString: String) {
+        // "X7L:2000078N"
+        val writeString = arrayOf("55", "02", "55", "aa", "55").map { it.toLong(radix = 16) }.map { it.toByte() }.toByteArray()
+
+        bleObservable
+            .firstOrError()
+            .flatMap { it.writeCharacteristic(writeUUID, writeString) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.e("asdf", "write success ${RequestConverter.parseStatus(it)}.")
+            }, ::onConnectionError)
+            .let { compositeDisposable.add(it) }
+    }
+
+    private fun prepareConnectionObservable(): Observable<RxBleConnection> =
+        bleDevice
+            .establishConnection(true)
+            .takeUntil(disconnectTriggerSubject)
+            .compose(ReplayingShare.instance())
+
+    private fun onNotificationReceived(bytes: ByteArray) {
     }
 
     private fun openDialog() {

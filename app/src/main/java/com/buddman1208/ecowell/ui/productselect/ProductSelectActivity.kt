@@ -10,7 +10,6 @@ import com.buddman1208.ecowell.databinding.ActivityProductSelectBinding
 import com.buddman1208.ecowell.ui.base.BaseActivity
 import com.buddman1208.ecowell.ui.bluetooth.BleDeviceActivity
 import com.buddman1208.ecowell.ui.ionstone.IonStoneActivity
-import com.buddman1208.ecowell.ui.luwell.LuwellActivity
 import com.buddman1208.ecowell.utils.BLEController
 import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.DeviceCache
@@ -46,7 +45,8 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
                     }
                     "startLuWellActivity" -> {
                         startActivity(
-                            intentFor<LuwellActivity>(
+//                            intentFor<LuwellActivity>(
+                            intentFor<IonStoneActivity>(
                                 "macAddress" to deviceCache?.macAddress,
                                 "write" to deviceCache?.writeUUID,
                                 "notify" to deviceCache?.notifyUUID
