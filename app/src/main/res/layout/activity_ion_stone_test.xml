@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.iontest.ui.main.PlaceholderFragment">
+    tools:context=".ui.iontest.IonStoneTestActivity">
 
     <TextView
         android:id="@+id/tvStatus"
@@ -102,6 +102,7 @@
             android:text="@string/pause" />
 
         <RadioGroup
+            android:id="@+id/rgLeftTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -147,5 +148,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnSetRunningTime" />
 
+    <CheckBox
+        android:id="@+id/cbSendSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="동작 시간 세팅 500ms마다 보내기"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnStop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

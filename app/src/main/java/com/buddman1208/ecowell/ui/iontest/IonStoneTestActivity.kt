@@ -5,6 +5,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.buddman1208.ecowell.R
+import com.buddman1208.ecowell.ui.productselect.ProductSelectActivity
 import com.buddman1208.ecowell.utils.BLEController
 import com.buddman1208.ecowell.utils.IonStoneRequestConverter
 import com.buddman1208.ecowell.utils.toStringArray
@@ -16,6 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_ion_stone_test.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.util.*
 
@@ -45,6 +47,10 @@ class IonStoneTestActivity : AppCompatActivity() {
     var time = System.currentTimeMillis()
 
     private fun timerRunnable(): Runnable = Runnable {
+        write(
+            IonStoneRequestConverter.getPlayTimeSettingRequest()
+        )
+        handler?.postDelayed(timerRunnable(), 1000)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +67,17 @@ class IonStoneTestActivity : AppCompatActivity() {
 
     }
 
+
     private fun test() {
+        cbSendSetting.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                handler?.removeCallbacksAndMessages(null)
+                handler?.postDelayed(timerRunnable(), 1000)
+            } else {
+                handler?.removeCallbacksAndMessages(null)
+            }
+        }
+
         btnRequestStatus.setOnClickListener {
             write(
                 IonStoneRequestConverter.getAllScanRequest()
@@ -69,14 +85,26 @@ class IonStoneTestActivity : AppCompatActivity() {
         }
 
         btnStart.setOnClickListener {
+            val mode = when (rgStartMode.checkedRadioButtonId) {
+                R.id.startMode1 -> 0x01
+                R.id.startMode2 -> 0x02
+                R.id.startMode3 -> 0x03
+                else -> 0x01
+            }
             write(
-                IonStoneRequestConverter.getPlayRequest()
+                IonStoneRequestConverter.getPlayRequest(mode)
             )
         }
 
         btnPause.setOnClickListener {
+            val leftTime = when (rgLeftTime.checkedRadioButtonId) {
+                R.id.leftTime1 -> Pair(0x02, 0x58)
+                R.id.leftTime2 -> Pair(0x01, 0x2c)
+                R.id.leftTime3 -> Pair(0x00, 0x0a)
+                else -> Pair(0x02, 0x58)
+            }
             write(
-                IonStoneRequestConverter.getPauseRequest()
+                IonStoneRequestConverter.getPauseRequest(leftTime)
             )
         }
 
@@ -88,7 +116,7 @@ class IonStoneTestActivity : AppCompatActivity() {
 
         btnSetRunningTime.setOnClickListener {
             write(
-                IonStoneRequestConverter.getPlayTimeSettingRequest()6
+                IonStoneRequestConverter.getPlayTimeSettingRequest()
             )
         }
     }
@@ -160,7 +188,7 @@ class IonStoneTestActivity : AppCompatActivity() {
     private fun onConnectionError(throwable: Throwable) {
         throwable.printStackTrace()
         runOnUiThread {
-            toast(throwable.localizedMessage ?: "")
+            onBackPressed()
         }
     }
 
@@ -176,6 +204,13 @@ class IonStoneTestActivity : AppCompatActivity() {
         Log.e("asdf", received)
 
         updateLastUpdateStatus(received)
+    }
+
+    override fun onBackPressed() {
+        handler?.removeCallbacksAndMessages(null)
+        disconnectTriggerSubject.onNext("")
+        startActivity<ProductSelectActivity>()
+        finish()
     }
 
 }

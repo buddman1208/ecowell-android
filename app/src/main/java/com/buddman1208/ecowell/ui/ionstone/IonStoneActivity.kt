@@ -116,14 +116,16 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             ivMode.setOnClickListener {
 //                openDialog()
                 write(
-                    IonStoneRequestConverter.getPlayRequest()
+                    IonStoneRequestConverter.getPlayRequest(0x01)
                 )
 
             }
             ivWater.setOnClickListener {
 //                openDialog()
                 write(
-                    IonStoneRequestConverter.getPauseRequest()
+                    IonStoneRequestConverter.getPauseRequest(
+                        Pair(0x02, 0x58)
+                    )
                 )
 
             }
