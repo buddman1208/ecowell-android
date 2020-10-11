@@ -9,7 +9,8 @@ import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.ActivityProductSelectBinding
 import com.buddman1208.ecowell.ui.base.BaseActivity
 import com.buddman1208.ecowell.ui.bluetooth.BleDeviceActivity
-import com.buddman1208.ecowell.ui.ionstone.IonStoneActivity
+import com.buddman1208.ecowell.ui.iontest.IonStoneTestActivity
+import com.buddman1208.ecowell.ui.luwell.LuwellActivity
 import com.buddman1208.ecowell.utils.BLEController
 import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.DeviceCache
@@ -45,8 +46,8 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
                     }
                     "startLuWellActivity" -> {
                         startActivity(
-//                            intentFor<LuwellActivity>(
-                            intentFor<IonStoneActivity>(
+                            intentFor<LuwellActivity>(
+//                            intentFor<IonStoneActivity>(
                                 "macAddress" to deviceCache?.macAddress,
                                 "write" to deviceCache?.writeUUID,
                                 "notify" to deviceCache?.notifyUUID
@@ -56,10 +57,10 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
                     }
                     "startIonStoneActivity" -> {
                         startActivity(
-                            intentFor<IonStoneActivity>(
-                                "macAddress" to "",
-                                "write" to "",
-                                "notify" to ""
+                            intentFor<IonStoneTestActivity>(
+                                "macAddress" to deviceCache?.macAddress,
+                                "write" to deviceCache?.writeUUID,
+                                "notify" to deviceCache?.notifyUUID
 //                                "macAddress" to deviceCache?.macAddress,
 //                                "write" to deviceCache?.writeUUID,
 //                                "notify" to deviceCache?.notifyUUID
@@ -124,7 +125,7 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
     }
 
     private fun initStrings() {
-        var conf: Configuration = resources.getConfiguration()
+        var conf: Configuration = resources.configuration
         conf = Configuration(conf)
         conf.setLocale(Locale(CredentialManager.instance.language))
         val localizedContext = createConfigurationContext(conf)

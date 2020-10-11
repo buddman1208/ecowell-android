@@ -44,9 +44,6 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
         if (isBleEnabled()) {
             BLEController
                 .getDeviceListStream()
-                .filter {
-                    it.bleDevice.name?.toUpperCase(Locale.ROOT)?.contains("CELL_POD") == true
-                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(::updateList) {
                     if (it is BleScanException) {
@@ -83,14 +80,17 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             Log.e("asdf", it.toString())
+                            // nordi : property 12 write property 16 notify
                             val write =
                                 it.bluetoothGattServices.map { it.characteristics }.flatten()
-                                    .find { it.properties == BluetoothGattCharacteristic.PROPERTY_WRITE }?.uuid
+//                                    .find { it.properties == BluetoothGattCharacteristic.PROPERTY_WRITE }?.uuid
+                                    .find { it.properties == 12 }?.uuid
                             val notify =
                                 it.bluetoothGattServices.map { it.characteristics }.flatten()
                                     .find { it.properties == BluetoothGattCharacteristic.PROPERTY_NOTIFY }?.uuid
                             returnSelected(mac, write, notify)
                         }, {
+                            Log.e("asdf", it.localizedMessage)
                             if (it is BleScanException) {
                                 toast(resources.getString(R.string.request_bluetooth_on))
                                 finish()

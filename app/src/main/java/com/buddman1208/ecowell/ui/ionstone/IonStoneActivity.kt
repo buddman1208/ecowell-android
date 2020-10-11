@@ -13,8 +13,9 @@ import com.buddman1208.ecowell.ui.ionstonesetting.IonStoneSettingResponse
 import com.buddman1208.ecowell.ui.productselect.ProductSelectActivity
 import com.buddman1208.ecowell.ui.setting.SettingDialogFragment
 import com.buddman1208.ecowell.utils.BLEController
-import com.buddman1208.ecowell.utils.RequestConverter
+import com.buddman1208.ecowell.utils.IonStoneRequestConverter
 import com.buddman1208.ecowell.utils.SettingCache
+import com.buddman1208.ecowell.utils.toStringArray
 import com.jakewharton.rx.ReplayingShare
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
@@ -99,24 +100,39 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
         binding.apply {
             ivRun.setOnClickListener {
-                if (viewModel.isModeSelected.get()) {
-                    if (viewModel.isRunning.get()) {
-                        stopTimer()
-                        viewModel.isRunning.set(false)
-                    } else {
-                        startTimer()
-                        viewModel.isRunning.set(true)
-                    }
-                }
+//                if (viewModel.isModeSelected.get()) {
+//                    if (viewModel.isRunning.get()) {
+//                        stopTimer()
+//                        viewModel.isRunning.set(false)
+//                    } else {
+//                        startTimer()
+//                        viewModel.isRunning.set(true)
+//                    }
+//                }
+                write(
+                    IonStoneRequestConverter.getPlayTimeSettingRequest()
+                )
             }
             ivMode.setOnClickListener {
-                openDialog()
+//                openDialog()
+                write(
+                    IonStoneRequestConverter.getPlayRequest()
+                )
+
             }
             ivWater.setOnClickListener {
-                openDialog()
+//                openDialog()
+                write(
+                    IonStoneRequestConverter.getPauseRequest()
+                )
+
             }
             ivAdditives.setOnClickListener {
-                openDialog()
+//                openDialog()
+                write(
+                    IonStoneRequestConverter.getStopRequest()
+                )
+
             }
         }
     }
@@ -145,7 +161,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
                     viewModel.isBluetoothEnabled.set(true)
                     write(
-                        RequestConverter.getAllScanRequest()
+                        IonStoneRequestConverter.getAllScanRequest()
                     )
                 }
             }
@@ -157,16 +173,14 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
     }
 
-    private fun write(writeString: String) {
+    private fun write(writeTarget: ByteArray) {
         // "X7L:2000078N"
-        val writeString = arrayOf("55", "02", "55", "aa", "55").map { it.toLong(radix = 16) }.map { it.toByte() }.toByteArray()
-
         bleObservable
             .firstOrError()
-            .flatMap { it.writeCharacteristic(writeUUID, writeString) }
+            .flatMap { it.writeCharacteristic(writeUUID, writeTarget) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.e("asdf", "write success ${RequestConverter.parseStatus(it)}.")
+                Log.e("asdf", "write success ${it.toStringArray().joinToString(", ")}")
             }, ::onConnectionError)
             .let { compositeDisposable.add(it) }
     }
@@ -178,6 +192,8 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             .compose(ReplayingShare.instance())
 
     private fun onNotificationReceived(bytes: ByteArray) {
+        val bytes = bytes.map { it.toUInt().toString(16) }
+        Log.e("asdf", bytes.joinToString(",  "))
     }
 
     private fun openDialog() {

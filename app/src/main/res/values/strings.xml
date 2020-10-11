@@ -62,5 +62,14 @@
         <item>3L</item>
         <item>4L</item>
     </string-array>
+    <string name="title_activity_ion_stone_test">IonStoneTestActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="last_received_notification">마지막으로 수신된 값 :\n%s</string>
+    <string name="request_status">상태 요청</string>
+    <string name="set_running_time">동작 시간 세팅</string>
+    <string name="pause">일시 정지</string>
+    <string name="stop">정지</string>
+    <string name="last_sent_value">마지막으로 보낸 값 : \n%s</string>
 
 </resources>
