@@ -60,16 +60,30 @@ class CredentialManager private constructor() {
             } else SettingCache()
         }
 
-    var deviceCache : DeviceCache?
+    var luwellCache : DeviceCache?
         set(value) {
             editor
                 .putString(
-                    "deviceCache", Gson().toJson(value, DeviceCache::class.java)
+                    "luwellCache", Gson().toJson(value, DeviceCache::class.java)
                 )
                 .apply()
         }
         get() {
             val deviceCache = preferences.getString("deviceCache", "") ?: ""
+            return if (deviceCache.isNotBlank()) {
+                Gson().fromJson(deviceCache, DeviceCache::class.java)
+            } else null
+        }
+    var ionstoneCache : DeviceCache?
+        set(value) {
+            editor
+                .putString(
+                    "ionstoneCache", Gson().toJson(value, DeviceCache::class.java)
+                )
+                .apply()
+        }
+        get() {
+            val deviceCache = preferences.getString("ionstoneCache", "") ?: ""
             return if (deviceCache.isNotBlank()) {
                 Gson().fromJson(deviceCache, DeviceCache::class.java)
             } else null

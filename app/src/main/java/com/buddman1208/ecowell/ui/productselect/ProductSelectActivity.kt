@@ -9,17 +9,20 @@ import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.ActivityProductSelectBinding
 import com.buddman1208.ecowell.ui.base.BaseActivity
 import com.buddman1208.ecowell.ui.bluetooth.BleDeviceActivity
-import com.buddman1208.ecowell.ui.iontest.IonStoneTestActivity
+import com.buddman1208.ecowell.ui.ionstone.IonStoneActivity
 import com.buddman1208.ecowell.ui.luwell.LuwellActivity
 import com.buddman1208.ecowell.utils.BLEController
 import com.buddman1208.ecowell.utils.CredentialManager
 import com.buddman1208.ecowell.utils.DeviceCache
 import com.buddman1208.ecowell.utils.LocaleWrapper
+import com.polidea.rxandroidble2.exceptions.BleScanException
 import com.polidea.rxandroidble2.scan.ScanResult
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_product_select.*
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
 import java.util.*
 
 class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, ProductSelectViewModel>(
@@ -30,7 +33,8 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
 
     val onSearchCompleteSubject: PublishSubject<String> = PublishSubject.create()
 
-    private var deviceCache: DeviceCache? = null
+    private var luwellCache: DeviceCache? = null
+    private var ionStoneCache: DeviceCache? = null
 
     val BLUETOOTH_ACTIVITY_RESULT_CODE = 6799
 
@@ -47,23 +51,19 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
                     "startLuWellActivity" -> {
                         startActivity(
                             intentFor<LuwellActivity>(
-//                            intentFor<IonStoneActivity>(
-                                "macAddress" to deviceCache?.macAddress,
-                                "write" to deviceCache?.writeUUID,
-                                "notify" to deviceCache?.notifyUUID
+                                "macAddress" to luwellCache?.macAddress,
+                                "write" to luwellCache?.writeUUID,
+                                "notify" to luwellCache?.notifyUUID
                             )
                         )
                         finish()
                     }
                     "startIonStoneActivity" -> {
                         startActivity(
-                            intentFor<IonStoneTestActivity>(
-                                "macAddress" to deviceCache?.macAddress,
-                                "write" to deviceCache?.writeUUID,
-                                "notify" to deviceCache?.notifyUUID
-//                                "macAddress" to deviceCache?.macAddress,
-//                                "write" to deviceCache?.writeUUID,
-//                                "notify" to deviceCache?.notifyUUID
+                            intentFor<IonStoneActivity>(
+                                "macAddress" to ionStoneCache?.macAddress,
+                                "write" to ionStoneCache?.writeUUID,
+                                "notify" to ionStoneCache?.notifyUUID
                             )
                         )
                         finish()
@@ -89,24 +89,33 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
         BLEController
             .getDeviceListStream()
             .filter {
-                it.bleDevice.name?.toUpperCase(Locale.ROOT)?.contains("CELL_POD") == true
+                it.bleDevice.name?.toUpperCase(Locale.ROOT)?.contains("CELL_POD") == true ||
+                        it.bleDevice.name?.toUpperCase(Locale.ROOT)?.contains("MONSTERBALL") == true
             }
             .takeUntil(onSearchCompleteSubject)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(::updateTarget) {
-//                if (it is BleScanException) {
-//                    toast("블루투스를 허용해주세요.")
-//                }
-//                longToast(it.message.toString())
+                if (it is BleScanException) {
+                    toast("블루투스를 허용해주세요.")
+                }
+                longToast(it.message.toString())
             }
             .let { compositeDisposable.add(it) }
     }
 
     private fun updateTarget(result: ScanResult) {
-        val isTarget = (result.bleDevice.macAddress == deviceCache?.macAddress ?: "")
-        if(isTarget) {
-            viewModel.luWellAvailable.set(true)
-            onSearchCompleteSubject.onNext("")
+        val macaddress = result.bleDevice.macAddress
+        val devicename = result.bleDevice.name ?: ""
+
+        val isTarget =
+            macaddress == luwellCache?.macAddress ?: "" ||
+                    macaddress == ionStoneCache?.macAddress ?: ""
+
+        if (isTarget) {
+            val isLuwell = devicename.contains("CELL_POD")
+
+            if(isLuwell) viewModel.luWellAvailable.set(true)
+            else viewModel.ionStoneAvailable.set(true)
         }
     }
 
@@ -115,7 +124,8 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
         binding.vm = viewModel
         viewModel.event.addOnPropertyChangedCallback(eventCallback)
 
-        deviceCache = CredentialManager.instance.deviceCache
+        luwellCache = CredentialManager.instance.luwellCache
+        ionStoneCache = CredentialManager.instance.ionstoneCache
         subscribeDevices()
 
         val locale = ConfigurationCompat.getLocales(resources.configuration)[0]
@@ -139,16 +149,28 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BLUETOOTH_ACTIVITY_RESULT_CODE && resultCode == RESULT_OK) {
             data?.extras?.run {
+                val deviceName = getString("deviceName") ?: ""
                 val macAddress = getString("macAddress") ?: ""
                 val writeUUID = getSerializable("write") as UUID?
                 val notifyUUID = getSerializable("notify") as UUID?
 
-                if (listOf(macAddress, writeUUID.toString(), notifyUUID.toString()).none { it.isBlank() }) {
+                if (listOf(
+                        macAddress,
+                        writeUUID.toString(),
+                        notifyUUID.toString()
+                    ).none { it.isBlank() }
+                ) {
                     val device = DeviceCache(
                         macAddress, writeUUID!!, notifyUUID!!
                     )
-                    CredentialManager.instance.deviceCache = device
-                    this@ProductSelectActivity.deviceCache = device
+                    val isLuwell = deviceName.contains("CELL_POD")
+                    if (isLuwell) {
+                        CredentialManager.instance.luwellCache = device
+                        this@ProductSelectActivity.luwellCache = device
+                    } else {
+                        CredentialManager.instance.ionstoneCache = device
+                        this@ProductSelectActivity.ionStoneCache = device
+                    }
                 }
             }
         }

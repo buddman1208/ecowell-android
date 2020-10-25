@@ -1,8 +1,7 @@
 package com.buddman1208.ecowell
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,6 +11,17 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        println("180 msb ${GetMSB(180)} lsb ${GetLSB(180)}")
+        assertEquals(180, 0xB4)
+
+    }
+
+    fun GetMSB(intValue: Int): Int {
+        return intValue and -0x10000
+    }
+
+    fun GetLSB(intValue: Int): Int {
+        return intValue and 0x0000FFFF
     }
 }
+

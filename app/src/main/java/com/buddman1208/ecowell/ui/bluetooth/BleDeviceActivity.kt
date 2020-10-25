@@ -44,6 +44,10 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
         if (isBleEnabled()) {
             BLEController
                 .getDeviceListStream()
+                .filter {
+                    it.bleDevice.name?.toUpperCase(Locale.ROOT)?.contains("CELL_POD") == true ||
+                    it.bleDevice.name?.toUpperCase(Locale.ROOT)?.contains("MONSTERBALL") == true
+                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(::updateList) {
                     if (it is BleScanException) {
@@ -73,6 +77,11 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
                 }
                 onClick { index ->
                     val mac = item.bleDevice.macAddress
+                    val deviceName = item.bleDevice.name ?: ""
+
+                    returnSelected(deviceName, mac)
+                    //todo parameter change
+
                     BLEController.connectStream(mac)
                         .establishConnection(false)
                         .flatMapSingle { connection -> connection.discoverServices() }
@@ -83,12 +92,10 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
                             // nordi : property 12 write property 16 notify
                             val write =
                                 it.bluetoothGattServices.map { it.characteristics }.flatten()
-//                                    .find { it.properties == BluetoothGattCharacteristic.PROPERTY_WRITE }?.uuid
-                                    .find { it.properties == 12 }?.uuid
+                                    .find { it.properties == 12 || it.properties == BluetoothGattCharacteristic.PROPERTY_WRITE}?.uuid
                             val notify =
                                 it.bluetoothGattServices.map { it.characteristics }.flatten()
                                     .find { it.properties == BluetoothGattCharacteristic.PROPERTY_NOTIFY }?.uuid
-                            returnSelected(mac, write, notify)
                         }, {
                             Log.e("asdf", it.localizedMessage)
                             if (it is BleScanException) {
@@ -121,11 +128,12 @@ class BleDeviceActivity : BaseActivity<ActivityBluetoothDevicesBinding, BleDevic
 
     private fun isBleEnabled(): Boolean = true
 
-    private fun returnSelected(macAddress: String, write: UUID?, notify: UUID?) {
+    private fun returnSelected(productName: String, macAddress: String, write: UUID?, notify: UUID?) {
         if (write != null && notify != null) {
             val intent = Intent().apply {
                 putExtras(
                     bundleOf(
+                        "productName" to productName,
                         "macAddress" to macAddress,
                         "write" to write,
                         "notify" to notify
