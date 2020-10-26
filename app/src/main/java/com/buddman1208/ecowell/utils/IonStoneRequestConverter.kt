@@ -26,6 +26,24 @@ object IonStoneRequestConverter {
         }.toByteArray()
     }
 
+
+    fun parseNotification(byteArray: ByteArray) {
+        val data = byteArray.map { String.format("%02X", it) }
+        // 55,  0D,  66,  00,  03,  01,  00,  B4,  01,  2C,  01,  A4,  00,  00,  AA,  F0
+
+        // msb = "A4".toint(16)
+        // 남은 시간 msb.toInt() * 256 + lsb.toInt()
+        // 상태 받아서 시작하거나 아니면 타이머 재생, 시간은 기존대로. 7분으로 고정
+
+    }
+
+    enum class PlayStatus {
+        WAITING, PLAYING, PAUSING, COMPLETE, REST
+    }
+
+    enum class BatteryStatus {
+        NO, LOW, LEVEL1, LEVEL2, LEVEL3
+    }
 }
 fun ByteArray.toStringArray() = this.map { String.format("%02X", it) }
 

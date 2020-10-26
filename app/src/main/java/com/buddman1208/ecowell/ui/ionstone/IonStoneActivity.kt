@@ -114,27 +114,14 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 )
             }
             ivMode.setOnClickListener {
-//                openDialog()
-                write(
-                    IonStoneRequestConverter.getPlayRequest(0x01)
-                )
+                openDialog()
 
             }
             ivWater.setOnClickListener {
-//                openDialog()
-                write(
-                    IonStoneRequestConverter.getPauseRequest(
-                        Pair(0x02, 0x58)
-                    )
-                )
-
+                openDialog()
             }
             ivAdditives.setOnClickListener {
-//                openDialog()
-                write(
-                    IonStoneRequestConverter.getStopRequest()
-                )
-
+                openDialog()
             }
         }
     }
@@ -194,7 +181,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             .compose(ReplayingShare.instance())
 
     private fun onNotificationReceived(bytes: ByteArray) {
-        val bytes = bytes.map { it.toUInt().toString(16) }
+        val bytes = bytes.map { String.format("%02X", it) }
         Log.e("asdf", bytes.joinToString(",  "))
     }
 
