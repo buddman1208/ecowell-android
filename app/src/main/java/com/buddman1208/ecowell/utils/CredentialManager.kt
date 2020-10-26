@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.buddman1208.ecowell.AppController
 import com.google.gson.Gson
-import java.util.*
 
 class CredentialManager private constructor() {
     private val preferences: SharedPreferences
@@ -69,7 +68,7 @@ class CredentialManager private constructor() {
                 .apply()
         }
         get() {
-            val deviceCache = preferences.getString("deviceCache", "") ?: ""
+            val deviceCache = preferences.getString("luwellCache", "") ?: ""
             return if (deviceCache.isNotBlank()) {
                 Gson().fromJson(deviceCache, DeviceCache::class.java)
             } else null
@@ -110,7 +109,7 @@ data class SettingCache(
 )
 
 data class DeviceCache(
-    val macAddress: String,
-    val writeUUID: UUID,
-    val notifyUUID: UUID
+    val macAddress: String
+//    val writeUUID: UUID,
+//    val notifyUUID: UUID
 )

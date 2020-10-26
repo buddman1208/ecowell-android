@@ -1,8 +1,10 @@
 package com.buddman1208.ecowell.ui.productselect
 
+import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.ConfigurationCompat
 import androidx.databinding.Observable
 import com.buddman1208.ecowell.R
@@ -49,30 +51,83 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
                         )
                     }
                     "startLuWellActivity" -> {
-                        startActivity(
-                            intentFor<LuwellActivity>(
-                                "macAddress" to luwellCache?.macAddress,
-                                "write" to luwellCache?.writeUUID,
-                                "notify" to luwellCache?.notifyUUID
-                            )
-                        )
-                        finish()
+                        BLEController.connectStream(luwellCache?.macAddress ?: "")
+                            .establishConnection(false)
+                            .flatMapSingle { connection -> connection.discoverServices() }
+                            .take(1)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                Log.e("asdf", it.toString())
+                                // nordi : property 12 write property 16 notify
+                                val write =
+                                    it.bluetoothGattServices.map { it.characteristics }.flatten()
+                                        .find { it.properties == 12 || it.properties == BluetoothGattCharacteristic.PROPERTY_WRITE }?.uuid
+                                val notify =
+                                    it.bluetoothGattServices.map { it.characteristics }.flatten()
+                                        .find { it.properties == BluetoothGattCharacteristic.PROPERTY_NOTIFY }?.uuid
+
+                                startActivity(
+                                    intentFor<LuwellActivity>(
+                                        "macAddress" to luwellCache?.macAddress,
+                                        "write" to write,
+                                        "notify" to notify
+                                    )
+                                )
+                                finish()
+
+                            }, {
+                                toast("오류가 발생했습니다.\n${it.message}")
+                                if (it is BleScanException) {
+                                    toast(resources.getString(R.string.request_bluetooth_on))
+                                    finish()
+                                } else {
+                                    it.printStackTrace()
+                                }
+                            })
                     }
                     "startIonStoneActivity" -> {
-                        startActivity(
-                            intentFor<IonStoneActivity>(
-                                "macAddress" to ionStoneCache?.macAddress,
-                                "write" to ionStoneCache?.writeUUID,
-                                "notify" to ionStoneCache?.notifyUUID
-                            )
-                        )
-                        finish()
+                        BLEController.connectStream(ionStoneCache?.macAddress ?: "")
+                            .establishConnection(false)
+                            .flatMapSingle { connection -> connection.discoverServices() }
+                            .take(1)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                Log.e("asdf", it.toString())
+                                // nordi : property 12 write property 16 notify
+                                val write =
+                                    it.bluetoothGattServices.map { it.characteristics }.flatten()
+                                        .find { it.properties == 12 || it.properties == BluetoothGattCharacteristic.PROPERTY_WRITE }?.uuid
+                                val notify =
+                                    it.bluetoothGattServices.map { it.characteristics }.flatten()
+                                        .find { it.properties == BluetoothGattCharacteristic.PROPERTY_NOTIFY }?.uuid
+
+                                startActivity(
+                                    intentFor<IonStoneActivity>(
+                                        "macAddress" to ionStoneCache?.macAddress,
+                                        "write" to write,
+                                        "notify" to notify
+                                    )
+                                )
+                                finish()
+
+                            }, {
+                                toast("오류가 발생했습니다.\n${it.message}")
+                                if (it is BleScanException) {
+                                    toast(resources.getString(R.string.request_bluetooth_on))
+                                    finish()
+                                } else {
+                                    it.printStackTrace()
+                                }
+                            })
                     }
                     "onKoreanSelected" -> {
                         changeLanguage("ko")
                     }
                     "onEnglishSelected" -> {
                         changeLanguage("en")
+                    }
+                    else -> {
+
                     }
                 }
             }
@@ -114,7 +169,7 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
         if (isTarget) {
             val isLuwell = devicename.contains("CELL_POD")
 
-            if(isLuwell) viewModel.luWellAvailable.set(true)
+            if (isLuwell) viewModel.luWellAvailable.set(true)
             else viewModel.ionStoneAvailable.set(true)
         }
     }
@@ -149,21 +204,21 @@ class ProductSelectActivity : BaseActivity<ActivityProductSelectBinding, Product
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BLUETOOTH_ACTIVITY_RESULT_CODE && resultCode == RESULT_OK) {
             data?.extras?.run {
-                val deviceName = getString("deviceName") ?: ""
+                val productName = getString("productName") ?: ""
                 val macAddress = getString("macAddress") ?: ""
-                val writeUUID = getSerializable("write") as UUID?
-                val notifyUUID = getSerializable("notify") as UUID?
+//                val writeUUID = getSerializable("write") as UUID?
+//                val notifyUUID = getSerializable("notify") as UUID?
 
                 if (listOf(
-                        macAddress,
-                        writeUUID.toString(),
-                        notifyUUID.toString()
+                        macAddress
+//                        writeUUID.toString(),
+//                        notifyUUID.toString()
                     ).none { it.isBlank() }
                 ) {
                     val device = DeviceCache(
-                        macAddress, writeUUID!!, notifyUUID!!
+                        macAddress
                     )
-                    val isLuwell = deviceName.contains("CELL_POD")
+                    val isLuwell = productName.contains("CELL_POD")
                     if (isLuwell) {
                         CredentialManager.instance.luwellCache = device
                         this@ProductSelectActivity.luwellCache = device
