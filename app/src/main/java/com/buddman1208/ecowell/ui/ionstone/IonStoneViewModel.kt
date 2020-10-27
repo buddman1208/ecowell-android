@@ -6,6 +6,7 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseViewModel
+import com.buddman1208.ecowell.ui.luwell.BatteryLevel
 import com.buddman1208.ecowell.utils.clearAndSet
 
 class IonStoneViewModel : BaseViewModel() {
@@ -62,8 +63,4 @@ class IonStoneViewModel : BaseViewModel() {
         browseToStart.clearAndSet("https://cellpod.co.kr/")
     }
 
-}
-
-enum class BatteryLevel {
-    NO, LOW, MIDDLE, FULL
 }
