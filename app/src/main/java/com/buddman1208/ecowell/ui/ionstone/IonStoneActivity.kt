@@ -55,13 +55,15 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     var time = System.currentTimeMillis()
 
     private fun timerRunnable(): Runnable = Runnable {
-        handler?.postDelayed(timerRunnable(), 500)
+        handler?.postDelayed(timerRunnable(), 1000)
         timeLeft -= 1
         time = System.currentTimeMillis()
 
         updateProgress()
         write(
-            IonStoneRequestConverter.getAllScanRequest()
+            IonStoneRequestConverter.getLeftTimeSendRequest(
+                Pair(timeLeft.getMsb(), timeLeft.getLsb())
+            )
         )
     }
 
@@ -214,8 +216,8 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 when (deviceStatus.batteryStatus) {
                     IonStoneRequestConverter.BatteryStatus.NO -> 0
                     IonStoneRequestConverter.BatteryStatus.LOW -> 1
-                    IonStoneRequestConverter.BatteryStatus.LEVEL1, IonStoneRequestConverter.BatteryStatus.LEVEL2 -> 2
-                    IonStoneRequestConverter.BatteryStatus.LEVEL3 -> 3
+                    IonStoneRequestConverter.BatteryStatus.LEVEL1 -> 2
+                    IonStoneRequestConverter.BatteryStatus.LEVEL2 -> 3
                 }
             )
         )
@@ -271,7 +273,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                     "Salt\n2g"
                 )
 
-                write(IonStoneRequestConverter.getPlayTimeSettingRequest())
+                write(IonStoneRequestConverter.getPlayTimeSettingRequest(Pair(23.getMsb(), 23.getLsb())))
                 Handler().postDelayed({
                     write(IonStoneRequestConverter.getPlayRequest(3))
                 }, 100)

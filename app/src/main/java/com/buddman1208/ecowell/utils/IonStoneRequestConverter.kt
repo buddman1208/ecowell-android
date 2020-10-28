@@ -10,7 +10,7 @@ object IonStoneRequestConverter {
 
     fun getPlayRequest(mode: Int): ByteArray = listOf(0x22, mode, 0xaa).toRequest()
 
-    fun getPlayTimeSettingRequest(): ByteArray = listOf(0x11, 0x00, 0xb4, 0x01, 0x2c, 0x01, 0xa4, 0xaa).toRequest()
+    fun getPlayTimeSettingRequest(leftTime: Pair<Int, Int> = Pair(0x01, 0xA4)): ByteArray = listOf(0x11, 0x00, 0xb4, 0x01, 0x2c, leftTime.first, leftTime.second, 0xaa).toRequest()
 
     fun getLeftTimeSendRequest(leftTime: Pair<Int, Int>): ByteArray = listOf(0x77, leftTime.first, leftTime.second, 0xaa).toRequest()
 
@@ -51,7 +51,6 @@ object IonStoneRequestConverter {
             "01" -> BatteryStatus.LOW
             "02" -> BatteryStatus.LEVEL1
             "03" -> BatteryStatus.LEVEL2
-            "04" -> BatteryStatus.LEVEL3
             else -> BatteryStatus.NO
         }
 
@@ -78,7 +77,7 @@ object IonStoneRequestConverter {
     }
 
     enum class BatteryStatus {
-        NO, LOW, LEVEL1, LEVEL2, LEVEL3
+        NO, LOW, LEVEL1, LEVEL2
     }
 }
 fun ByteArray.toStringArray() = this.map { String.format("%02X", it) }
