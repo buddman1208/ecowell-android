@@ -7,6 +7,7 @@ import androidx.core.os.ConfigurationCompat
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.databinding.ActivityIonstoneBinding
 import com.buddman1208.ecowell.ui.base.BaseActivity
+import com.buddman1208.ecowell.ui.commondialog.CommonDialogFragment
 import com.buddman1208.ecowell.ui.ionstonesetting.IonStoneSettingCompleteListener
 import com.buddman1208.ecowell.ui.ionstonesetting.IonStoneSettingFragment
 import com.buddman1208.ecowell.ui.ionstonesetting.IonStoneSettingResponse
@@ -48,6 +49,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         intent.getSerializableExtra("notify") as UUID
     }
 
+    private var maxTime = MIN_7
     private var timeLeft: Int = 0
     private var handler: Handler? = Handler()
     private var checkHandler: Handler? = Handler()
@@ -66,6 +68,14 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             )
         )
     }
+
+    private fun restRunnable(): Runnable = Runnable {
+        handler?.postDelayed(timerRunnable(), 500)
+        write(
+            IonStoneRequestConverter.getAllScanRequest()
+        )
+    }
+
 
     private val settingInstance: SettingDialogFragment by lazy {
         val instance = SettingDialogFragment::class.java.newInstance()
@@ -177,15 +187,19 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     }
 
     private fun write(writeTarget: ByteArray) {
-        // "X7L:2000078N"
-        bleObservable
-            .firstOrError()
-            .flatMap { it.writeCharacteristic(writeUUID, writeTarget) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.e("asdf", "write success ${it.toStringArray().joinToString(", ")}")
-            }, ::onConnectionError)
-            .let { compositeDisposable.add(it) }
+        try {
+            // "X7L:2000078N"
+            bleObservable
+                .firstOrError()
+                .flatMap { it.writeCharacteristic(writeUUID, writeTarget) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.e("asdf", "write success ${it.toStringArray().joinToString(", ")}")
+                }, ::onConnectionError)
+                .let { compositeDisposable.add(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun prepareConnectionObservable(): Observable<RxBleConnection> =
@@ -205,6 +219,9 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     }
 
     var isTimeReceived: Boolean = false
+    var previousMode: IonStoneRequestConverter.PlayStatus =
+        IonStoneRequestConverter.PlayStatus.WAITING
+
     private fun updateViewModel(deviceStatus: IonStoneStatus) {
         if (viewModel.isModeSelected.get().not()) {
             if (deviceStatus.playStatus != IonStoneRequestConverter.PlayStatus.WAITING) {
@@ -221,15 +238,33 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 }
             )
         )
-        if (deviceStatus.playStatus == IonStoneRequestConverter.PlayStatus.PLAYING) {
-            viewModel.isRunning.set(true)
-            startTimer()
-        } else {
-            viewModel.isRunning.set(false)
-            stopTimer()
+        viewModel.isResting.set(deviceStatus.playStatus == IonStoneRequestConverter.PlayStatus.REST)
+        when (deviceStatus.playStatus) {
+            IonStoneRequestConverter.PlayStatus.REST -> {
+                if (deviceStatus.leftTime <= 0) {
+                    showDialogAndFinish(MainBluetoothState.REST_COMPLETE)
+                    compositeDisposable.clear()
+                    handler?.removeCallbacksAndMessages(null)
+                    return
+                }
+                maxTime = MIN_1
+                if (previousMode == IonStoneRequestConverter.PlayStatus.PLAYING) {
+                    onOperationCompleteDialog()
+                }
+                stopTimer()
+                handler?.postDelayed(restRunnable(), 500)
+            }
+            IonStoneRequestConverter.PlayStatus.PLAYING -> {
+                viewModel.isRunning.set(true)
+                startTimer()
+            }
+            else -> {
+                viewModel.isRunning.set(false)
+                stopTimer()
+            }
         }
 
-        if (!isTimeReceived || !deviceStatus.playStatus.canGetTime()) {
+        if (deviceStatus.playStatus == IonStoneRequestConverter.PlayStatus.REST || !isTimeReceived || !deviceStatus.playStatus.canGetTime()) {
             Log.e("asdf", "updating time $isTimeReceived ${deviceStatus.playStatus}")
 
             updateTimer(deviceStatus.leftTime)
@@ -237,6 +272,8 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 isTimeReceived = true
             }
         }
+
+        previousMode = deviceStatus.playStatus
     }
 
     private fun getBatteryStatus(batteryLevel: Int): BatteryLevel {
@@ -251,8 +288,6 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     private fun openDialog() {
         IonStoneSettingFragment(object : IonStoneSettingCompleteListener {
             override fun onComplete(response: IonStoneSettingResponse) {
-//                viewModel.isModeSelected.set(true)
-//                updateTimer()
                 viewModel.modeString.set(
                     when (response.mode) {
                         0 -> "위생용품"
@@ -270,10 +305,31 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                     }
                 )
                 viewModel.additiveString.set(
-                    "Salt\n2g"
+                    "Salt\n${when (response.water) {
+                        0 -> "2L"
+                        1 -> "3L"
+                        2 -> "4L"
+                        else -> ""
+                    }}g"
                 )
 
-                write(IonStoneRequestConverter.getPlayTimeSettingRequest(Pair(23.getMsb(), 23.getLsb())))
+                val minute = when(response.mode) {
+                    0 -> 3
+                    1 -> 5
+                    2 -> 7
+                    else -> 0
+                } * 60
+
+                maxTime = minute
+
+                write(
+                    IonStoneRequestConverter.getPlayTimeSettingRequest(
+                        Pair(
+                            minute.getMsb(),
+                            minute.getLsb()
+                        )
+                    )
+                )
                 Handler().postDelayed({
                     write(IonStoneRequestConverter.getPlayRequest(3))
                 }, 100)
@@ -281,11 +337,45 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         }).show(supportFragmentManager, "")
     }
 
+
+    private var isCompleteOrErrorOccurred: Boolean = false
     private fun showDialogAndFinish(state: MainBluetoothState) {
-        viewModel.isBluetoothEnabled.set(false)
-        disconnectTriggerSubject.onNext("")
-        compositeDisposable.clear()
-        finish()
+        try {
+            if (isCompleteOrErrorOccurred.not()) {
+                compositeDisposable.clear()
+                handler?.removeCallbacksAndMessages(null)
+                isCompleteOrErrorOccurred = true
+                viewModel.isBluetoothEnabled.set(false)
+                disconnectTriggerSubject.onNext("")
+                CommonDialogFragment(
+                    text = when (state) {
+                        MainBluetoothState.COMPLETE -> resources.getString(R.string.operation_completed)
+                        MainBluetoothState.REST_COMPLETE -> resources.getString(R.string.rest_completed)
+                        MainBluetoothState.BLUETOOTH_ERROR -> resources.getString(R.string.bluetooth_error)
+                        MainBluetoothState.BLUETOOTH_DISCONNECTED -> resources.getString(R.string.bluetooth_disconnected)
+                        MainBluetoothState.LOW_BATTERY -> resources.getString(R.string.low_battery)
+                    },
+                    _positiveCallback = {
+                        startActivity<ProductSelectActivity>()
+                        finish()
+                        handler?.removeCallbacksAndMessages(null)
+                    },
+                    _isOnlyConfirmable = true,
+                    _isCancelable = false
+                ).show(supportFragmentManager, "")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun onOperationCompleteDialog() {
+        CommonDialogFragment(
+            text = resources.getString(R.string.operation_completed),
+            _positiveCallback = {},
+            _isOnlyConfirmable = true,
+            _isCancelable = false
+        ).show(supportFragmentManager, "")
     }
 
     private fun updateTimer(leftSeconds: Int = MIN_7) {
@@ -311,7 +401,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 timeLeft / 60
             )} : ${String.format("%02d", timeLeft % 60)}"
         )
-        val progress = timeLeft * 100 / MIN_7
+        val progress = timeLeft * 100 / maxTime
         viewModel.progress.set(progress)
     }
 
@@ -333,6 +423,9 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
     companion object {
         const val MIN_7: Int = 7 * 60
+        const val MIN_5: Int = 5 * 60
+        const val MIN_3: Int = 3 * 60
+        const val MIN_1: Int = 1 * 60
         val settingOkTriggerSubject = PublishSubject.create<SettingCache>()
 
     }
@@ -349,5 +442,6 @@ enum class MainBluetoothState {
     COMPLETE,
     BLUETOOTH_ERROR,
     BLUETOOTH_DISCONNECTED,
-    LOW_BATTERY
+    LOW_BATTERY,
+    REST_COMPLETE
 }

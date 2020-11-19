@@ -4,6 +4,7 @@ import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseDialogViewModel
 import com.buddman1208.ecowell.utils.clearAndSet
@@ -12,6 +13,10 @@ class IonStoneDialogViewModel : BaseDialogViewModel() {
 
     val isKorean: ObservableBoolean = ObservableBoolean(true)
     val isSecondPage: ObservableBoolean = ObservableBoolean(false)
+
+    val mode: ObservableField<String> = ObservableField("")
+    val minute: ObservableField<Int> = ObservableField(0)
+    val water: ObservableField<Int> = ObservableField(0)
 
     fun onDismissClicked() = dismissEvent.clearAndSet("dismiss")
 

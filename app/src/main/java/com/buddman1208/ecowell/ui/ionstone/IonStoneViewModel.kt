@@ -22,6 +22,7 @@ class IonStoneViewModel : BaseViewModel() {
     val isBluetoothEnabled: ObservableBoolean = ObservableBoolean(false)
     val progress: ObservableInt = ObservableInt(0)
     val isModeSelected: ObservableBoolean = ObservableBoolean(false)
+    val isResting: ObservableBoolean = ObservableBoolean(false)
     val isRunning: ObservableBoolean = ObservableBoolean(false)
 
     val currentTime: ObservableField<String> = ObservableField("")
@@ -29,6 +30,13 @@ class IonStoneViewModel : BaseViewModel() {
     val modeString: ObservableField<String> = ObservableField("Mode\nSelect")
     val waterString: ObservableField<String> = ObservableField("Water\nSelect")
     val additiveString: ObservableField<String> = ObservableField("Water\nSelect")
+
+
+    fun resetString() {
+        modeString.set("Mode\nSelect")
+        waterString.set("Water\nSelect")
+        additiveString.set("Water\nSelect")
+    }
 
     // Resources
     var batteryImg: ObservableInt = ObservableInt(R.drawable.img_battery_full)

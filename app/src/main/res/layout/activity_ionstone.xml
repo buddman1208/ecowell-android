@@ -124,7 +124,23 @@
                     android:src="@{vm.isModeSelected() ? (vm.isRunning() ? @drawable/img_ionstone_timer_pause : @drawable/img_ionstone_timer_active) : @drawable/img_ionstone_timer_inactive}"
                     app:layout_constraintBottom_toBottomOf="@id/glBottom"
                     app:layout_constraintDimensionRatio="h, 1"
+                    android:visibility="@{vm.isResting() ? View.GONE : View.VISIBLE}"
                     app:layout_constraintLeft_toLeftOf="@id/glLeft"
+                    app:layout_constraintRight_toRightOf="@id/glRight"
+                    app:layout_constraintTop_toTopOf="@id/glTop" />
+
+                <TextView
+                    android:id="@+id/ivResting"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@id/glBottom"
+                    app:layout_constraintDimensionRatio="h, 1"
+                    android:visibility="@{vm.isResting() ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintLeft_toLeftOf="@id/glLeft"
+                    android:text="휴식중"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:gravity="center"
                     app:layout_constraintRight_toRightOf="@id/glRight"
                     app:layout_constraintTop_toTopOf="@id/glTop" />
 
@@ -147,6 +163,7 @@
                     android:text="@{vm.currentTime}"
                     android:textColor="#000"
                     android:textSize="25sp"
+                    android:visibility="@{vm.isRunning() || vm.isResting() ? View.VISIBLE : View.GONE}"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/textbaseline"
                     app:layout_constraintLeft_toLeftOf="@id/glLeft"

@@ -26,6 +26,7 @@
     <string name="connected">기기에 연결되었습니다.</string>
     <string name="connected_alert">기기 알림에 연결되었습니다.</string>
     <string name="operation_completed">사용이 완료되었습니다.</string>
+    <string name="rest_completed">휴식이 완료되었습니다.</string>
     <string name="bluetooth_error">블루투스 연결 중 문제가 발생했습니다.</string>
     <string name="bluetooth_disconnected">블루투스 연결이 끊어졌습니다.\n연결을 확인해주세요.</string>
     <string name="low_battery">배터리 충전이 필요합니다.\n배터리를 확인해주세요.</string>
@@ -71,5 +72,6 @@
     <string name="pause">일시 정지</string>
     <string name="stop">정지</string>
     <string name="last_sent_value">마지막으로 보낸 값 : \n%s</string>
+    <string name="select_result_info_text">물 약 %dL에서는\n소금을 %dg 넣어주세요.\n총 %d분의 시간이 걸립니다.</string>
 
 </resources>
