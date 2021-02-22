@@ -77,26 +77,13 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     }
 
 
-    private val settingInstance: SettingDialogFragment by lazy {
-        val instance = SettingDialogFragment::class.java.newInstance()
-        instance
-    }
-
     private val eventCallback =
         object : androidx.databinding.Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(
                 sender: androidx.databinding.Observable?,
                 propertyId: Int
             ) {
-                viewModel.event.get()?.run {
-                    when (this) {
-                        "openSetting" -> {
-                            settingInstance.show(supportFragmentManager, "")
-                        }
-                        else -> {
-                        }
-                    }
-                }
+                viewModel.setStringByMode()
             }
 
         }
@@ -113,7 +100,11 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
         binding.apply {
             ivRun.setOnClickListener {
-                if (viewModel.isModeSelected.get()) {
+                if(viewModel.mode.get() != 0) {
+                    if (!viewModel.isModeSelected.get()) {
+                        write(IonStoneRequestConverter.getPlayTimeSettingRequest())
+                        viewModel.isModeSelected.set(true)
+                    }
                     val time = timeLeft
                     if (viewModel.isRunning.get()) {
                         write(
@@ -122,7 +113,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                             )
                         )
                     } else {
-                        write(IonStoneRequestConverter.getPlayRequest(3))
+                        write(IonStoneRequestConverter.getPlayRequest(viewModel.mode.get()))
                         Handler().postDelayed({
                             write(
                                 IonStoneRequestConverter.getLeftTimeSendRequest(
@@ -135,16 +126,16 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             }
             ivMode.setOnClickListener {
                 if (!viewModel.isModeSelected.get())
-                    openDialog()
+                    viewModel.changeMode()
 
             }
             ivWater.setOnClickListener {
                 if (!viewModel.isModeSelected.get())
-                    openDialog()
+                    viewModel.changeMode()
             }
             ivAdditives.setOnClickListener {
                 if (!viewModel.isModeSelected.get())
-                    openDialog()
+                    viewModel.changeMode()
             }
         }
     }
@@ -226,6 +217,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         if (viewModel.isModeSelected.get().not()) {
             if (deviceStatus.playStatus != IonStoneRequestConverter.PlayStatus.WAITING) {
                 viewModel.isModeSelected.set(true)
+                viewModel.mode.set(deviceStatus.currentSetting)
             }
         }
         viewModel.batteryLevel.set(
@@ -284,59 +276,6 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             else -> BatteryLevel.FULL
         }
     }
-
-    private fun openDialog() {
-        IonStoneSettingFragment(object : IonStoneSettingCompleteListener {
-            override fun onComplete(response: IonStoneSettingResponse) {
-                viewModel.modeString.set(
-                    when (response.mode) {
-                        0 -> "위생용품"
-                        1 -> "홈케어"
-                        2 -> "전자제품"
-                        else -> ""
-                    }
-                )
-                viewModel.waterString.set(
-                    when (response.water) {
-                        0 -> "2L"
-                        1 -> "3L"
-                        2 -> "4L"
-                        else -> ""
-                    }
-                )
-                viewModel.additiveString.set(
-                    "Salt\n${when (response.water) {
-                        0 -> "2L"
-                        1 -> "3L"
-                        2 -> "4L"
-                        else -> ""
-                    }}g"
-                )
-
-                val minute = when(response.mode) {
-                    0 -> 3
-                    1 -> 5
-                    2 -> 7
-                    else -> 0
-                } * 60
-
-                maxTime = minute
-
-                write(
-                    IonStoneRequestConverter.getPlayTimeSettingRequest(
-                        Pair(
-                            minute.getMsb(),
-                            minute.getLsb()
-                        )
-                    )
-                )
-                Handler().postDelayed({
-                    write(IonStoneRequestConverter.getPlayRequest(3))
-                }, 100)
-            }
-        }).show(supportFragmentManager, "")
-    }
-
 
     private var isCompleteOrErrorOccurred: Boolean = false
     private fun showDialogAndFinish(state: MainBluetoothState) {
@@ -413,12 +352,12 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
     override fun onPause() {
         super.onPause()
-        viewModel.event.removeOnPropertyChangedCallback(eventCallback)
+        viewModel.mode.removeOnPropertyChangedCallback(eventCallback)
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.event.addOnPropertyChangedCallback(eventCallback)
+        viewModel.mode.addOnPropertyChangedCallback(eventCallback)
     }
 
     companion object {

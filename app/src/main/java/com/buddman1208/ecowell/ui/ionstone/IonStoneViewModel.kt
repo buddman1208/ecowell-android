@@ -8,6 +8,7 @@ import com.buddman1208.ecowell.R
 import com.buddman1208.ecowell.ui.base.BaseViewModel
 import com.buddman1208.ecowell.ui.luwell.BatteryLevel
 import com.buddman1208.ecowell.utils.clearAndSet
+import io.reactivex.internal.operators.observable.ObservableObserveOn
 
 class IonStoneViewModel : BaseViewModel() {
 
@@ -31,6 +32,50 @@ class IonStoneViewModel : BaseViewModel() {
     val waterString: ObservableField<String> = ObservableField("Water\nSelect")
     val additiveString: ObservableField<String> = ObservableField("Water\nSelect")
 
+    val mode: ObservableInt = ObservableInt(0)
+    fun changeMode() {
+        if(!isModeSelected.get()) {
+            mode.set(
+                when(mode.get()) {
+                    0 -> 1
+                    1 -> 2
+                    2 -> 3
+                    3 -> 1
+                    else -> 1
+                }
+            )
+        }
+    }
+
+    fun setStringByMode() {
+        modeString.set(
+            when(mode.get()) {
+                0 -> "Mode\nSelect"
+                1 -> "5분"
+                2 -> "7분"
+                3 -> "9분"
+                else -> ""
+            }
+        )
+        waterString.set(
+            when(mode.get()) {
+                0 -> "Water\nSelect"
+                1 -> "3L"
+                2 -> "4L"
+                3 -> "5L"
+                else -> ""
+            }
+        )
+        additiveString.set(
+            when(mode.get()) {
+                0 -> "Additives\nSelect"
+                1 -> "소금\n6g"
+                2 -> "소금\n8g"
+                3 -> "소금\n10g"
+                else -> ""
+            }
+        )
+    }
 
     fun resetString() {
         modeString.set("Mode\nSelect")

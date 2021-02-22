@@ -10,7 +10,7 @@ object IonStoneRequestConverter {
 
     fun getPlayRequest(mode: Int): ByteArray = listOf(0x22, mode, 0xaa).toRequest()
 
-    fun getPlayTimeSettingRequest(leftTime: Pair<Int, Int> = Pair(0x01, 0xA4)): ByteArray = listOf(0x11, 0x00, 0xb4, 0x01, 0x2c, leftTime.first, leftTime.second, 0xaa).toRequest()
+    fun getPlayTimeSettingRequest(): ByteArray = listOf(0x11, 0x01, 0x2C, 0x01, 0xA4, 0x02, 0x1C, 0xaa).toRequest()
 
     fun getLeftTimeSendRequest(leftTime: Pair<Int, Int>): ByteArray = listOf(0x77, leftTime.first, leftTime.second, 0xaa).toRequest()
 

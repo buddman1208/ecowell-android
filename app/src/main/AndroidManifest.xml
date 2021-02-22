@@ -27,6 +27,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.luwell.LuwellActivity"
@@ -35,7 +36,9 @@
         <activity
             android:name=".ui.ionstone.IonStoneActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".ui.bluetooth.BleDeviceActivity"
             android:launchMode="singleTop"
