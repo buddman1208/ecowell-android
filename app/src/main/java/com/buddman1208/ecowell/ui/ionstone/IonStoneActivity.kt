@@ -49,7 +49,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         intent.getSerializableExtra("notify") as UUID
     }
 
-    private var maxTime = MIN_7
+    private var maxTime = MIN_9
     private var timeLeft: Int = 0
     private var handler: Handler? = Handler()
     private var checkHandler: Handler? = Handler()
@@ -84,6 +84,12 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 propertyId: Int
             ) {
                 viewModel.setStringByMode()
+                maxTime = when(viewModel.mode.get()) {
+                    1 -> 5
+                    2 -> 7
+                    3 -> 9
+                    else -> 9
+                }
             }
 
         }
@@ -361,9 +367,9 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     }
 
     companion object {
+        const val MIN_9: Int = 9 * 60
         const val MIN_7: Int = 7 * 60
         const val MIN_5: Int = 5 * 60
-        const val MIN_3: Int = 3 * 60
         const val MIN_1: Int = 1 * 60
         val settingOkTriggerSubject = PublishSubject.create<SettingCache>()
 
