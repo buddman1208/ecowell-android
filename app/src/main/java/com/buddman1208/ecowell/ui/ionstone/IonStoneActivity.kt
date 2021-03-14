@@ -84,12 +84,15 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 propertyId: Int
             ) {
                 viewModel.setStringByMode()
-                maxTime = when(viewModel.mode.get()) {
-                    1 -> 5
-                    2 -> 7
-                    3 -> 9
-                    else -> 9
+                val leftTime = when(viewModel.mode.get()) {
+                    1 -> MIN_5
+                    2 -> MIN_7
+                    3 -> MIN_9
+                    else -> MIN_9
                 }
+
+                maxTime = leftTime
+                timeLeft = leftTime
             }
 
         }
@@ -98,12 +101,13 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
         viewModel.isKorean.set(ConfigurationCompat.getLocales(resources.configuration)[0].language == "ko")
-
+//
         validateConnection()
         disconnectTriggerSubject
             .subscribe { compositeDisposable.clear() }
             .let { compositeDisposable.add(it) }
 
+//        test()
         binding.apply {
             ivRun.setOnClickListener {
                 if(viewModel.mode.get() != 0) {
@@ -144,6 +148,12 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                     viewModel.changeMode()
             }
         }
+    }
+
+    private fun test() {
+        maxTime = MIN_7
+        timeLeft = MIN_7
+        startTimer()
     }
 
     private fun validateConnection() {
