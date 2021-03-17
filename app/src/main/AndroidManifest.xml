@@ -14,10 +14,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.test.TestActivity"></activity>
         <activity
             android:name=".ui.iontest.IonStoneTestActivity"
             android:label="@string/title_activity_ion_stone_test"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:launchMode="singleTop"
@@ -31,11 +32,11 @@
         <activity
             android:name=".ui.luwell.LuwellActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ionstone.IonStoneActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.bluetooth.BleDeviceActivity"
             android:launchMode="singleTop"

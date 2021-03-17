@@ -1,6 +1,7 @@
 package com.buddman1208.ecowell.ui.ionstone
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.util.Log
 import androidx.core.os.ConfigurationCompat
@@ -22,6 +23,8 @@ import com.polidea.rxandroidble2.exceptions.BleDisconnectedException
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.activity_luwell.*
+import kotlinx.android.synthetic.main.activity_test.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.util.*
@@ -56,21 +59,45 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
     var time = System.currentTimeMillis()
 
-    private fun timerRunnable(): Runnable = Runnable {
-        handler?.postDelayed(timerRunnable(), 1000)
-        timeLeft -= 1
-        time = System.currentTimeMillis()
+//    private fun timerRunnable(): Runnable = Runnable {
+//        handler?.postDelayed(timerRunnable(), 1000)
+//        timeLeft -= 1
+//        time = System.currentTimeMillis()
+//
+//        updateProgress()
+//        write(
+//            IonStoneRequestConverter.getLeftTimeSendRequest(
+//                Pair(timeLeft.getMsb(), timeLeft.getLsb())
+//            )
+//        )
+//    }
 
-        updateProgress()
-        write(
-            IonStoneRequestConverter.getLeftTimeSendRequest(
-                Pair(timeLeft.getMsb(), timeLeft.getLsb())
-            )
-        )
+    private var timer: CountDownTimer? = null
+    private var timeLeftInMillis: Long? = null
+    private fun getTimerInstance(): CountDownTimer {
+        return object : CountDownTimer(timeLeftInMillis ?: timeLeft * 1000L, 1000L) {
+            override fun onTick(millisUntilFinished: Long) {
+                timeLeftInMillis = millisUntilFinished
+                timeLeft = (millisUntilFinished / 1000).toInt()
+
+                updateProgress()
+                write(
+                    IonStoneRequestConverter.getLeftTimeSendRequest(
+                        Pair(timeLeft.getMsb(), timeLeft.getLsb())
+                    )
+                )
+            }
+
+            override fun onFinish() {
+                timeLeftInMillis = null
+                timeLeft = 0
+            }
+        }
     }
 
+
     private fun restRunnable(): Runnable = Runnable {
-        handler?.postDelayed(timerRunnable(), 500)
+        handler?.postDelayed(restRunnable(), 500)
         write(
             IonStoneRequestConverter.getAllScanRequest()
         )
@@ -84,7 +111,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 propertyId: Int
             ) {
                 viewModel.setStringByMode()
-                val leftTime = when(viewModel.mode.get()) {
+                val leftTime = when (viewModel.mode.get()) {
                     1 -> MIN_5
                     2 -> MIN_7
                     3 -> MIN_9
@@ -101,16 +128,14 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
         viewModel.isKorean.set(ConfigurationCompat.getLocales(resources.configuration)[0].language == "ko")
-//
         validateConnection()
         disconnectTriggerSubject
             .subscribe { compositeDisposable.clear() }
             .let { compositeDisposable.add(it) }
 
-//        test()
         binding.apply {
             ivRun.setOnClickListener {
-                if(viewModel.mode.get() != 0) {
+                if (viewModel.mode.get() != 0) {
                     if (!viewModel.isModeSelected.get()) {
                         write(IonStoneRequestConverter.getPlayTimeSettingRequest())
                         viewModel.isModeSelected.set(true)
@@ -148,12 +173,18 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                     viewModel.changeMode()
             }
         }
+//        test()
     }
 
     private fun test() {
+        viewModel.mode.set(3)
         maxTime = MIN_7
         timeLeft = MIN_7
         startTimer()
+        ivRun.setOnClickListener {
+            if (isCountDownTimerRunning) stopTimer()
+            else startTimer()
+        }
     }
 
     private fun validateConnection() {
@@ -338,15 +369,21 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         updateProgress()
     }
 
+    private var isCountDownTimerRunning: Boolean = false
     private fun startTimer() {
-        handler?.removeCallbacksAndMessages(null)
-        handler?.postDelayed(timerRunnable(), 1000)
+//        handler?.removeCallbacksAndMessages(null)
+//        handler?.postDelayed(timerRunnable(), 1000)
+        timer = getTimerInstance()
+        timer?.start()
         updateProgress()
+        isCountDownTimerRunning = true
     }
 
     private fun stopTimer() {
-        handler?.removeCallbacksAndMessages(null)
+//        handler?.removeCallbacksAndMessages(null)
+        timer?.cancel()
         updateProgress()
+        isCountDownTimerRunning = false
     }
 
     private fun updateProgress() {
