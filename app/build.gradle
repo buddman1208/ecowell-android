@@ -11,8 +11,8 @@ android {
         applicationId "com.buddman1208.ecowell"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 9
-        versionName "2.1"
+        versionCode 10
+        versionName "2.2"
 
          testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

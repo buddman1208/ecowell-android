@@ -55,22 +55,6 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     private var maxTime = MIN_9
     private var timeLeft: Int = 0
     private var handler: Handler? = Handler()
-    private var checkHandler: Handler? = Handler()
-
-    var time = System.currentTimeMillis()
-
-//    private fun timerRunnable(): Runnable = Runnable {
-//        handler?.postDelayed(timerRunnable(), 1000)
-//        timeLeft -= 1
-//        time = System.currentTimeMillis()
-//
-//        updateProgress()
-//        write(
-//            IonStoneRequestConverter.getLeftTimeSendRequest(
-//                Pair(timeLeft.getMsb(), timeLeft.getLsb())
-//            )
-//        )
-//    }
 
     private var timer: CountDownTimer? = null
     private var timeLeftInMillis: Long? = null
@@ -81,10 +65,12 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 timeLeft = (millisUntilFinished / 1000).toInt()
 
                 updateProgress()
+                Log.e("asdf", "ticking and wring leftTime $timeLeft")
                 write(
                     IonStoneRequestConverter.getLeftTimeSendRequest(
                         Pair(timeLeft.getMsb(), timeLeft.getLsb())
-                    )
+                    ),
+                    "ticking"
                 )
             }
 
@@ -95,11 +81,38 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         }
     }
 
+    private var restTimer: CountDownTimer? = null
+    private var restTimeLeftInMillis: Long? = null
+    private var restTimeLeft: Int = 0
+    private fun getRestTimerInstance(): CountDownTimer {
+        return object : CountDownTimer(restTimeLeftInMillis ?: restTimeLeft * 1000L, 1000L) {
+            override fun onTick(millisUntilFinished: Long) {
+                restTimeLeftInMillis = millisUntilFinished
+                restTimeLeft = (millisUntilFinished / 1000).toInt()
 
+                updateProgress(isResting = true)
+                Log.e("asdf", "ticking and wring restLeftTime $restTimeLeft timeLeft $timeLeft")
+                write(
+                    IonStoneRequestConverter.getAllScanRequest(),
+                    "rest ticking"
+                )
+            }
+
+            override fun onFinish() {
+                restTimeLeftInMillis = null
+                restTimeLeft = 0
+            }
+        }
+    }
+
+
+    private var isRestRunnableRunning: Boolean = false
     private fun restRunnable(): Runnable = Runnable {
-        handler?.postDelayed(restRunnable(), 500)
+        isRestRunnableRunning = true
+        handler?.postDelayed(restRunnable(), 1000)
         write(
-            IonStoneRequestConverter.getAllScanRequest()
+            IonStoneRequestConverter.getAllScanRequest(),
+            "restRunnable"
         )
     }
 
@@ -120,9 +133,11 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
                 maxTime = leftTime
                 timeLeft = leftTime
+                Log.e("Asdf", "time changing timeLeft = $timeLeft")
             }
 
         }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,7 +152,10 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             ivRun.setOnClickListener {
                 if (viewModel.mode.get() != 0) {
                     if (!viewModel.isModeSelected.get()) {
-                        write(IonStoneRequestConverter.getPlayTimeSettingRequest())
+                        write(
+                            IonStoneRequestConverter.getPlayTimeSettingRequest(),
+                            "run play btn first time"
+                        )
                         viewModel.isModeSelected.set(true)
                     }
                     val time = timeLeft
@@ -145,7 +163,8 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                         write(
                             IonStoneRequestConverter.getPauseRequest(
                                 Pair(time.getMsb(), time.getLsb())
-                            )
+                            ),
+                            "run pause btn"
                         )
                     } else {
                         write(IonStoneRequestConverter.getPlayRequest(viewModel.mode.get()))
@@ -153,8 +172,12 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                             write(
                                 IonStoneRequestConverter.getLeftTimeSendRequest(
                                     Pair(timeLeft.getMsb(), timeLeft.getLsb())
-                                )
+                                ),
+                                "run play btn"
                             )
+                            if (!isCountDownTimerRunning) {
+                                startTimer()
+                            }
                         }, 100)
                     }
                 }
@@ -211,9 +234,9 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
                     viewModel.isBluetoothEnabled.set(true)
                     write(
-                        IonStoneRequestConverter.getAllScanRequest()
+                        IonStoneRequestConverter.getAllScanRequest(),
+                        "setupNotification"
                     )
-//                    checkHandler?.postDelayed(checkRunnable(), 500)
                 }
             }
             .flatMap { it }
@@ -224,7 +247,8 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
 
     }
 
-    private fun write(writeTarget: ByteArray) {
+    private fun write(writeTarget: ByteArray, from: String = "") {
+        Log.e("asdf", "writing from $from")
         try {
             // "X7L:2000078N"
             bleObservable
@@ -232,7 +256,10 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
                 .flatMap { it.writeCharacteristic(writeUUID, writeTarget) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.e("asdf", "write success ${it.toStringArray().joinToString(", ")}")
+                    Log.e(
+                        "asdf",
+                        "write ionstone success ${writeTarget.toStringArray().joinToString(", ")}"
+                    )
                 }, ::onConnectionError)
                 .let { compositeDisposable.add(it) }
         } catch (e: Exception) {
@@ -278,37 +305,50 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
             )
         )
         viewModel.isResting.set(deviceStatus.playStatus == IonStoneRequestConverter.PlayStatus.REST)
-        when (deviceStatus.playStatus) {
-            IonStoneRequestConverter.PlayStatus.REST -> {
-                if (deviceStatus.leftTime <= 0) {
-                    showDialogAndFinish(MainBluetoothState.REST_COMPLETE)
-                    compositeDisposable.clear()
-                    handler?.removeCallbacksAndMessages(null)
-                    return
-                }
-                maxTime = MIN_1
-                if (previousMode == IonStoneRequestConverter.PlayStatus.PLAYING) {
-                    onOperationCompleteDialog()
-                }
-                stopTimer()
-                handler?.postDelayed(restRunnable(), 500)
-            }
-            IonStoneRequestConverter.PlayStatus.PLAYING -> {
-                viewModel.isRunning.set(true)
-                startTimer()
-            }
-            else -> {
-                viewModel.isRunning.set(false)
-                stopTimer()
-            }
-        }
 
-        if (deviceStatus.playStatus == IonStoneRequestConverter.PlayStatus.REST || !isTimeReceived || !deviceStatus.playStatus.canGetTime()) {
+        if (deviceStatus.playStatus == IonStoneRequestConverter.PlayStatus.REST) {
+            isTimeReceived = true
+        } else if (!isTimeReceived ||
+            !deviceStatus.playStatus.canGetTime()
+        ) {
             Log.e("asdf", "updating time $isTimeReceived ${deviceStatus.playStatus}")
 
             updateTimer(deviceStatus.leftTime)
             if (deviceStatus.playStatus.canGetTime()) {
                 isTimeReceived = true
+            }
+        }
+
+        when (deviceStatus.playStatus) {
+            IonStoneRequestConverter.PlayStatus.REST -> {
+                if (deviceStatus.leftTime <= 0) {
+                    showDialogAndFinish(MainBluetoothState.REST_COMPLETE)
+                    compositeDisposable.clear()
+//                    handler?.removeCallbacksAndMessages(null)
+                    stopRestTimer()
+                    return
+                }
+                maxTime = MIN_5
+                if (previousMode == IonStoneRequestConverter.PlayStatus.PLAYING) {
+                    onOperationCompleteDialog()
+                }
+                if (!isRestingCountDownTimerRunning) {
+                    stopTimer()
+                    restTimeLeft = deviceStatus.leftTime
+                    startRestTimer()
+                }
+            }
+            IonStoneRequestConverter.PlayStatus.PLAYING -> {
+                viewModel.isRunning.set(true)
+                Log.e("asdf", "got playing previous mode ${previousMode.name}")
+                if (previousMode == IonStoneRequestConverter.PlayStatus.WAITING) {
+                    Log.e("asdf", "got playing previous mode waiting startime timer")
+                    startTimer()
+                }
+            }
+            else -> {
+                viewModel.isRunning.set(false)
+                stopTimer()
             }
         }
 
@@ -365,7 +405,9 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     }
 
     private fun updateTimer(leftSeconds: Int = MIN_7) {
+        Log.e("asdf", "updating timer $leftSeconds")
         timeLeft = leftSeconds
+//        timeLeft = MIN_1
         updateProgress()
     }
 
@@ -373,6 +415,7 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     private fun startTimer() {
 //        handler?.removeCallbacksAndMessages(null)
 //        handler?.postDelayed(timerRunnable(), 1000)
+        Log.e("asdf", "starting timer left time $timeLeft")
         timer = getTimerInstance()
         timer?.start()
         updateProgress()
@@ -386,14 +429,34 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
         isCountDownTimerRunning = false
     }
 
-    private fun updateProgress() {
+    private var isRestingCountDownTimerRunning: Boolean = false
+    private fun startRestTimer() {
+        isRestingCountDownTimerRunning = true
+        Log.e("asdf", "starting resting timer left time $restTimeLeft")
+        restTimer = getRestTimerInstance()
+        restTimer?.start()
+        updateProgress(isResting = true)
+    }
+
+    private fun stopRestTimer() {
+        isRestingCountDownTimerRunning = false
+        restTimer?.cancel()
+        updateProgress(isResting = true)
+    }
+
+    private fun updateProgress(isResting: Boolean = false) {
+        val time = if (isResting) restTimeLeft else timeLeft
+        Log.e(
+            "asdf",
+            "updating progress resttime $restTimeLeft timeleft $timeLeft isResting $isResting"
+        )
         viewModel.currentTime.set(
             "${String.format(
                 "%02d",
-                timeLeft / 60
-            )} : ${String.format("%02d", timeLeft % 60)}"
+                time / 60
+            )} : ${String.format("%02d", time % 60)}"
         )
-        val progress = timeLeft * 100 / maxTime
+        val progress = time * 100 / maxTime
         viewModel.progress.set(progress)
     }
 
@@ -425,7 +488,8 @@ class IonStoneActivity : BaseActivity<ActivityIonstoneBinding, IonStoneViewModel
     override fun onBackPressed() {
         startActivity<ProductSelectActivity>()
         finish()
-        handler?.removeCallbacksAndMessages(null)
+        timer?.cancel()
+        restTimer?.cancel()
     }
 
 }
